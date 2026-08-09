@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../App.Core.Persistence/App.Core.Persistence.csproj" />
+    <ProjectReference Include="../App.Core.SharedLibrary/App.Core.SharedLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

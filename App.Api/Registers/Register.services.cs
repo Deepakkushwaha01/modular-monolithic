@@ -1,7 +1,3 @@
-using App.Core.Persistence.Authentication.Users.Repositories;
-using App.Core.Persistence.Orders.Repositories;
-using App.Core.SharedLibrary.Patterns.Mediatr.Abstractions;
-
 namespace App.API.Registers;
 
 public static partial class Register

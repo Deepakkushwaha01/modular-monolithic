@@ -18,6 +18,8 @@ namespace App.Core.Persistence.Identity.Users.Entities
 
         public bool IsActive { get; protected internal set; }
 
+        public bool IsBlocked { get; protected internal set; }
+
         public bool IsEmailVerified { get; protected internal set; }
 
         public DateTime? LastLoginDate { get; protected internal set; }

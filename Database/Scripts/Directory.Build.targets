@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <!-- This file lives in Database/Scripts; make EF paths independent of the invoking project. -->
+    <RepositoryRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../..'))</RepositoryRoot>
+    <PersistenceProject>$(RepositoryRoot)/Core/App.Core.Persistence/App.Core.Persistence.csproj</PersistenceProject>
+    <StartupProject>$(RepositoryRoot)/App.Api/App.API.csproj</StartupProject>
+  </PropertyGroup>
+
+  <!-- Directory.Build.targets is imported by every project, so execute EF only once. -->
+  <Target Name="AddMigration" Condition="'$(MSBuildProjectName)' == 'App.Core.Persistence'">
+    <Exec WorkingDirectory="$(RepositoryRoot)" StandardOutputImportance="High" StandardErrorImportance="High" Command="dotnet ef migrations add $(MigrationName) --project &quot;$(PersistenceProject)&quot; --startup-project &quot;$(StartupProject)&quot; --verbose" />
+  </Target>
+
+  <Target Name="UpdateDatabase" Condition="'$(MSBuildProjectName)' == 'App.Core.Persistence'">
+    <Exec WorkingDirectory="$(RepositoryRoot)" StandardOutputImportance="High" StandardErrorImportance="High" Command="dotnet ef database update --project &quot;$(PersistenceProject)&quot; --startup-project &quot;$(StartupProject)&quot; --verbose" />
+  </Target>
+
+</Project>

@@ -1,3 +1,6 @@
 # .NET
 bin/
 obj/
+
+# EF Core Migrations
+Core/App.Core.Persistence/Migrations/

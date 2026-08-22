@@ -15,6 +15,7 @@ namespace App.Core.Persistence.Configurations.Database.ModelConfigurations.Exten
             builder.Property(x => x.Id)
                    .HasColumnName("Id")
                    .HasColumnType("bigint")
+                   .ValueGeneratedOnAdd()
                    .IsRequired();
 
             // PostgreSQL Native UUID Type

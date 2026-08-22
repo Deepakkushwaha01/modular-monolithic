@@ -1,9 +1,18 @@
 using App.Core.Persistence.Configurations.Entity;
+using App.Core.Persistence.Identity.Addresses.Entities;
+using App.Core.Persistence.Identity.Claims.Entities;
+using App.Core.Persistence.Identity.Roles.Entities;
 
 namespace App.Core.Persistence.Identity.Users.Entities
 {
     public class User : TrackedEntity
     {
+        public ICollection<Address> Addresses { get; protected internal set; } = new List<Address>();
+
+        public ICollection<UserRole> UserRoles { get; protected internal set; } = new List<UserRole>();
+
+        public ICollection<UserClaim> UserClaims { get; protected internal set; } = new List<UserClaim>();
+
         public string Email { get; protected internal set; } = string.Empty;
 
         public string Password { get; protected internal set; } = string.Empty;
@@ -53,6 +62,7 @@ namespace App.Core.Persistence.Identity.Users.Entities
                 Phone = phone,
                 IsPhoneVerified = isPhoneVerified,
                 IsActive = isActive,
+                IsBlocked = false,
                 IsEmailVerified = isEmailVerified,
                 LastLoginDate = lastLoginDate,
                 ProfilePhoto = profilePhoto,

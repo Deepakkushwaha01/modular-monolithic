@@ -1,4 +1,5 @@
 using App.Core.SharedLibrary.Patterns.Result;
+using App.Core.SharedLibrary.Errors;
 
 namespace App.Core.SharedLibrary.Patterns.Mediatr.Abstractions;
 
@@ -20,7 +21,11 @@ public class CommandDispatcher : ICommandDispatcher
         dynamic? handler = _serviceProvider.GetService(handlerType);
 
         if (handler == null)
-            throw new InvalidOperationException($"No handler found for command type {command.GetType().Name}");
+            throw new InvalidOperationException(string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                CommonErrorMessages.HandlerNotFound,
+                "command",
+                command.GetType().Name));
 
         return await handler.ExecuteAsync((dynamic)command, cancellationToken);
     }

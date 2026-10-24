@@ -16,4 +16,37 @@ public class Address : TrackedEntity
     public bool IsDefault { get; protected internal set; }
 
     public User User { get; protected internal set; } = null!;
+
+    public static Address Create(
+        long id,
+        Guid uid,
+        long userId,
+        string addressType,
+        string addressLine1,
+        string? addressLine2,
+        string city,
+        string state,
+        string zipCode,
+        string country,
+        bool isDefault,
+        DateTime createdOn,
+        DateTime? updatedOn)
+    {
+        return new Address
+        {
+            Id = id,
+            Uid = uid,
+            UserId = userId,
+            AddressType = addressType,
+            AddressLine1 = addressLine1,
+            AddressLine2 = addressLine2,
+            City = city,
+            State = state,
+            ZipCode = zipCode,
+            Country = country,
+            IsDefault = isDefault,
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
+        };
+    }
 }

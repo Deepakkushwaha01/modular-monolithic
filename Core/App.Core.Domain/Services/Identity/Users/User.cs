@@ -1,0 +1,237 @@
+namespace App.Core.Domain.Identity.Users
+{
+    using App.Core.Domain.Configurations.Entity;
+    using App.Core.Domain.Configurations.Enums;
+    using App.Core.Domain.Identity.Addresses;
+    using App.Core.Domain.Identity.Claims;
+    using App.Core.Domain.Identity.Roles;
+
+    public class User : DomainEntity
+    {
+        public string Email { get; protected set; } = string.Empty;
+
+        public string Password { get; protected set; } = string.Empty;
+
+        public string? FirstName { get; protected set; }
+
+        public string? LastName { get; protected set; }
+
+        public string Phone { get; protected set; } = string.Empty;
+
+        public bool IsPhoneVerified { get; protected set; }
+
+        public bool IsEmailVerified { get; protected set; }
+
+        public bool IsActive { get; protected set; }
+
+        public bool IsBlocked { get; protected set; }
+
+        public DateTime? LastLoginDate { get; protected set; }
+
+        public string? ProfilePhoto { get; protected set; }
+
+        public ICollection<Address> Addresses { get; protected set; }
+            = new List<Address>();
+
+        public ICollection<UserRole> UserRoles { get; protected set; }
+            = new List<UserRole>();
+
+        public ICollection<UserClaim> UserClaims { get; protected set; }
+            = new List<UserClaim>();
+
+
+        #region Update Methods
+
+        public void UpdateProfile(
+            string? firstName,
+            string? lastName,
+            string phone)
+        {
+            if (!string.Equals(Phone, phone, StringComparison.Ordinal))
+                IsPhoneVerified = false;
+
+            FirstName = firstName;
+            LastName = lastName;
+            Phone = phone;
+
+            MarkModified();
+        }
+
+        public void UpdateEmail(string email)
+        {
+            Email = email;
+            IsEmailVerified = false;
+
+            MarkModified();
+        }
+
+        public void UpdatePassword(string password)
+        {
+            Password = password;
+
+            MarkModified();
+        }
+
+        public void UpdatePhone(string phone)
+        {
+            if (!string.Equals(Phone, phone, StringComparison.Ordinal))
+                IsPhoneVerified = false;
+
+            Phone = phone;
+
+            MarkModified();
+        }
+
+        public void VerifyEmail()
+        {
+            IsEmailVerified = true;
+
+            MarkModified();
+        }
+
+        public void VerifyPhone()
+        {
+            IsPhoneVerified = true;
+
+            MarkModified();
+        }
+
+        public void Activate()
+        {
+            IsActive = true;
+            IsBlocked = false;
+
+            MarkModified();
+        }
+
+        public void Deactivate()
+        {
+            IsActive = false;
+
+            MarkModified();
+        }
+
+        public void Block()
+        {
+            IsBlocked = true;
+
+            MarkModified();
+        }
+
+        public void Unblock()
+        {
+            IsBlocked = false;
+
+            MarkModified();
+        }
+
+        public void UpdateLastLogin()
+        {
+            LastLoginDate = DateTime.UtcNow;
+
+            MarkModified();
+        }
+
+        #endregion
+
+
+        #region Create New User
+
+        public static User Create(
+            string email,
+            string password,
+            string phone,
+            string? firstName = null,
+            string? lastName = null)
+        {
+            return new User
+            {
+                Uid = Guid.NewGuid(),
+
+                Email = email,
+                Password = password,
+
+                FirstName = firstName,
+                LastName = lastName,
+                Phone = phone,
+
+                IsPhoneVerified = false,
+                IsEmailVerified = false,
+
+                IsActive = true,
+                IsBlocked = false,
+
+                LastLoginDate = null,
+                ProfilePhoto = null,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = email,
+
+                State = EntityState.Added
+            };
+        }
+
+        #endregion
+
+
+        #region DB To Domain
+
+        /// <summary>
+        /// Only for database to domain mapping
+        /// </summary>
+        public static User Create(
+            long id,
+            Guid uid,
+            string email,
+            string password,
+            string? firstName,
+            string? lastName,
+            string phone,
+            bool isPhoneVerified,
+            bool isActive,
+            bool isBlocked,
+            bool isEmailVerified,
+            DateTime? lastLoginDate,
+            string? profilePhoto,
+            DateTime createdOn,
+            DateTime? updatedOn,
+            IEnumerable<Address>? addresses = null,
+            IEnumerable<UserRole>? userRoles = null,
+            IEnumerable<UserClaim>? userClaims = null)
+        {
+            return new User
+            {
+                Id = id,
+                Uid = uid,
+
+                Email = email,
+                Password = password,
+
+                FirstName = firstName,
+                LastName = lastName,
+                Phone = phone,
+
+                IsPhoneVerified = isPhoneVerified,
+                IsActive = isActive,
+                IsBlocked = isBlocked,
+                IsEmailVerified = isEmailVerified,
+
+                LastLoginDate = lastLoginDate,
+                ProfilePhoto = profilePhoto,
+
+                CreatedOn = createdOn,
+                UpdatedOn = updatedOn,
+
+                Addresses = addresses?.ToList()
+                    ?? new List<Address>(),
+
+                UserRoles = userRoles?.ToList()
+                    ?? new List<UserRole>(),
+
+                UserClaims = userClaims?.ToList()
+                    ?? new List<UserClaim>()
+            };
+        }
+
+        #endregion
+    }
+}

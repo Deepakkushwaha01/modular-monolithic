@@ -9,6 +9,11 @@ public static partial class Register
     public static IServiceCollection RegisterDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         DatabaseConfigurationSettings databaseSettings = new DatabaseConfigurationSettings(configuration);
+        services.AddSingleton(new AppDbContextSeedOptions
+        {
+            LoadSeedData = configuration.GetValue<bool>("LoadSeedData")
+        });
+
         // register database context for command
         services.AddDbContext<IAppDbContext, AppDbContext>(options =>
         {

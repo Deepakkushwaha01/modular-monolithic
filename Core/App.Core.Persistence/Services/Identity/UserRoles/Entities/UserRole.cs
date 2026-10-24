@@ -13,4 +13,27 @@ public class UserRole : TrackedEntity
     public User User { get; protected internal set; } = null!;
     public Role Role { get; protected internal set; } = null!;
     public User? AssignedByUser { get; protected internal set; }
+
+    public static UserRole Create(
+        long id,
+        Guid uid,
+        long userId,
+        long roleId,
+        DateTime assignedAt,
+        long? assignedBy,
+        DateTime createdOn,
+        DateTime? updatedOn)
+    {
+        return new UserRole
+        {
+            Id = id,
+            Uid = uid,
+            UserId = userId,
+            RoleId = roleId,
+            AssignedAt = assignedAt,
+            AssignedBy = assignedBy,
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
+        };
+    }
 }

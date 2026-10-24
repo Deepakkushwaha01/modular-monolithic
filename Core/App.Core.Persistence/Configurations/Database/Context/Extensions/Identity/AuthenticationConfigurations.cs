@@ -5,7 +5,7 @@ namespace App.Core.Persistence.Configurations.Database.Context.Extensions.Identi
 
     public static class IdentityConfigurations
     {
-        public static void ConfigureIdentity(this ModelBuilder modelBuilder)
+        public static void ConfigureIdentity(this ModelBuilder modelBuilder, bool loadSeedData = false)
         {
             modelBuilder.ApplyConfiguration(new UserModelConfiguration());
             modelBuilder.ApplyConfiguration(new AddressModelConfiguration());
@@ -15,6 +15,10 @@ namespace App.Core.Persistence.Configurations.Database.Context.Extensions.Identi
             modelBuilder.ApplyConfiguration(new RoleClaimModelConfiguration());
             modelBuilder.ApplyConfiguration(new UserClaimModelConfiguration());
 
+            if (loadSeedData)
+            {
+                modelBuilder.AddIdentitySeedData();
+            }
         }
     }
 }

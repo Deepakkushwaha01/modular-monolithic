@@ -22,6 +22,7 @@ namespace App.API.Registers
             builder.Services.AddControllers();
 
             builder.Services
+                .RegisterApiVersioning()
                 .RegisterSwagger(builder.Configuration)
                 .RegisterServices(builder.Configuration, builder.Environment)
                 .RegisterDatabase(builder.Configuration);

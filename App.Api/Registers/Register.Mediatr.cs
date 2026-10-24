@@ -19,16 +19,7 @@ namespace App.API.Registers
 
         private static void RegisterHandlers(IServiceCollection services)
         {
-            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a =>
-                {
-                    if (a.IsDynamic)
-                        return false;
-
-                    string? name = a.GetName().Name;
-                    return !string.IsNullOrWhiteSpace(name) &&
-                        (name.StartsWith("App.") || name.StartsWith("App.Core"));
-                });
+            IEnumerable<Assembly> assemblies = GetApplicationAssemblies();
 
             IEnumerable<Type> handlerTypes = assemblies
                 .SelectMany(a => a.GetTypes())
@@ -59,6 +50,46 @@ namespace App.API.Registers
                     }
                 }
             }
+        }
+
+        private static IEnumerable<Assembly> GetApplicationAssemblies()
+        {
+            Assembly? entryAssembly = Assembly.GetEntryAssembly();
+            Queue<Assembly> pending = new(AppDomain.CurrentDomain.GetAssemblies());
+            if (entryAssembly is not null)
+                pending.Enqueue(entryAssembly);
+
+            HashSet<string> visited = new(StringComparer.OrdinalIgnoreCase);
+            List<Assembly> assemblies = [];
+
+            while (pending.TryDequeue(out Assembly? assembly))
+            {
+                if (assembly.IsDynamic || !visited.Add(assembly.FullName ?? assembly.GetName().Name!))
+                    continue;
+
+                string? name = assembly.GetName().Name;
+                if (string.IsNullOrWhiteSpace(name) || !name.StartsWith("App.", StringComparison.Ordinal))
+                    continue;
+
+                assemblies.Add(assembly);
+
+                foreach (AssemblyName reference in assembly.GetReferencedAssemblies())
+                {
+                    if (reference.Name?.StartsWith("App.", StringComparison.Ordinal) != true)
+                        continue;
+
+                    try
+                    {
+                        pending.Enqueue(Assembly.Load(reference));
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Ignore optional application references that are not deployed.
+                    }
+                }
+            }
+
+            return assemblies;
         }
     }
 }

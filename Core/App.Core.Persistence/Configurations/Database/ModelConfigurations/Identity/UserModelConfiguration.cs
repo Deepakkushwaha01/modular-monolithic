@@ -18,7 +18,7 @@ namespace App.Core.Persistence.Configurations.Database.ModelConfigurations.Ident
             builder.Property(x => x.Email)
                    .HasColumnName("Email")
                    .HasColumnType("character varying")
-                   .HasMaxLength(255)
+                   .HasMaxLength(App.Core.SharedLibrary.Configuration.Identity.UserConfigurations.EmailMaximumLength)
                    .IsRequired();
 
             builder.Property(x => x.Password)
@@ -30,20 +30,20 @@ namespace App.Core.Persistence.Configurations.Database.ModelConfigurations.Ident
             builder.Property(x => x.FirstName)
                    .HasColumnName("FirstName")
                    .HasColumnType("character varying")
-                   .HasMaxLength(100)
+                   .HasMaxLength(App.Core.SharedLibrary.Configuration.Identity.UserConfigurations.FirstNameMaximumLength)
                    .HasDefaultValue(null);
 
             builder.Property(x => x.LastName)
                    .HasColumnName("LastName")
                    .HasColumnType("character varying")
-                   .HasMaxLength(100)
+                   .HasMaxLength(App.Core.SharedLibrary.Configuration.Identity.UserConfigurations.LastNameMaximumLength)
                    .HasDefaultValue(null);
 
             builder.Property(x => x.Phone)
                    .HasColumnName("Phone")
                    .HasColumnType("character varying")
-                   .HasMaxLength(20)
-                   .HasDefaultValue(null);
+                   .HasMaxLength(App.Core.SharedLibrary.Configuration.Identity.UserConfigurations.PhoneStorageMaxLength)
+                   .IsRequired();
 
             builder.Property(x => x.IsPhoneVerified)
                    .HasColumnName("IsPhoneVerified")
@@ -52,6 +52,11 @@ namespace App.Core.Persistence.Configurations.Database.ModelConfigurations.Ident
 
             builder.Property(x => x.IsActive)
                    .HasColumnName("IsActive")
+                   .HasColumnType("boolean")
+                   .IsRequired();
+
+            builder.Property(x => x.IsBlocked)
+                   .HasColumnName("IsBlocked")
                    .HasColumnType("boolean")
                    .IsRequired();
 

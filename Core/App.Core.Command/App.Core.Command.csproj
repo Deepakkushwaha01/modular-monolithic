@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../App.Core.Persistence/App.Core.Persistence.csproj" />
     <ProjectReference Include="../App.Core.SharedLibrary/App.Core.SharedLibrary.csproj" />
   </ItemGroup>

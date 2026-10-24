@@ -1,9 +1,13 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using App.API.Settings;
 
 namespace Dotnet.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion(1.0)]
+[SwaggerModule(SwaggerDocuments.Common)]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
     [HttpGet]

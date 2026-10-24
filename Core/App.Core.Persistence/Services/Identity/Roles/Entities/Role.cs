@@ -13,4 +13,31 @@ public class Role : TrackedEntity
 
     public ICollection<UserRole> UserRoles { get; protected internal set; } = new List<UserRole>();
     public ICollection<RoleClaim> RoleClaims { get; protected internal set; } = new List<RoleClaim>();
+
+    public static Role Create(
+        long id,
+        Guid uid,
+        string name,
+        string slug,
+        string? description,
+        bool isSystemRole,
+        bool isActive,
+        DateTime createdOn,
+        DateTime? updatedOn)
+    {
+        return new Role
+        {
+            Id = id,
+            Uid = uid,
+            Name = name,
+            Slug = slug,
+            Description = description,
+            IsSystemRole = isSystemRole,
+            IsActive = isActive,
+            UserRoles = new List<UserRole>(),
+            RoleClaims = new List<RoleClaim>(),
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
+        };
+    }
 }

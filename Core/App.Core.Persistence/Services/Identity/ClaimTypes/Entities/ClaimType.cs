@@ -12,4 +12,31 @@ public class ClaimType : TrackedEntity
 
     public ICollection<RoleClaim> RoleClaims { get; protected internal set; } = new List<RoleClaim>();
     public ICollection<UserClaim> UserClaims { get; protected internal set; } = new List<UserClaim>();
+
+    public static ClaimType Create(
+        long id,
+        Guid uid,
+        string name,
+        string? description,
+        ClaimDataType dataType,
+        string module,
+        bool isActive,
+        DateTime createdOn,
+        DateTime? updatedOn)
+    {
+        return new ClaimType
+        {
+            Id = id,
+            Uid = uid,
+            Name = name,
+            Description = description,
+            DataType = dataType,
+            Module = module,
+            IsActive = isActive,
+            RoleClaims = new List<RoleClaim>(),
+            UserClaims = new List<UserClaim>(),
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
+        };
+    }
 }

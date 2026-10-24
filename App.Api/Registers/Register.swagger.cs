@@ -1,5 +1,7 @@
 using App.API.Settings;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace App.API.Registers;
 
@@ -13,11 +15,27 @@ public static partial class Register
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
+            foreach (SwaggerDocumentSettings document in swagger.Documents)
             {
-                Title = swagger.Title,
-                Version = swagger.Version,
-                Description = swagger.Description
+                options.SwaggerDoc(document.Name, new OpenApiInfo
+                {
+                    Title = document.Title,
+                    Version = document.Version,
+                    Description = document.Description
+                });
+            }
+
+            options.DocInclusionPredicate((documentName, apiDescription) =>
+            {
+                SwaggerDocumentSettings? document = swagger.Documents
+                    .SingleOrDefault(item => string.Equals(item.Name, documentName, StringComparison.OrdinalIgnoreCase));
+                SwaggerModuleAttribute? module = (apiDescription.ActionDescriptor as ControllerActionDescriptor)?
+                    .ControllerTypeInfo.GetCustomAttribute<SwaggerModuleAttribute>();
+
+                return document is not null
+                    && module is not null
+                    && string.Equals(document.Module, module.Name, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(document.Version, apiDescription.GroupName, StringComparison.OrdinalIgnoreCase);
             });
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -51,19 +69,25 @@ public static partial class Register
 
     public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app, IConfiguration config)
     {
+        SwaggerConfigurationSettings swagger = new SwaggerConfigurationSettings(config);
+
         app.UseSwagger(c =>
         {
-            c.RouteTemplate = config["Swagger:RouteTemplate"];
+            c.RouteTemplate = swagger.RouteTemplate;
         });
 
         app.UseSwaggerUI(c =>
         {
             c.DisplayRequestDuration();
-            c.SwaggerEndpoint(
-                config["Swagger:JsonEndpointUrl"],
-                config["Swagger:Title"]);
 
-            c.RoutePrefix = config["Swagger:RoutePrefix"];
+            foreach (SwaggerDocumentSettings document in swagger.Documents)
+            {
+                c.SwaggerEndpoint($"/{swagger.RoutePrefix}/{document.Name}/swagger.json", document.Title);
+            }
+
+            c.InjectJavascript("/swagger/select-api-label.js");
+            c.InjectStylesheet("/swagger/select-api-label.css");
+            c.RoutePrefix = swagger.RoutePrefix;
         });
 
         return app;

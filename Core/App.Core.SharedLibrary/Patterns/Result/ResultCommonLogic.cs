@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Net;
+using App.Core.SharedLibrary.Errors;
 
 namespace App.Core.SharedLibrary.Patterns.Result
 {
@@ -30,16 +31,16 @@ public abstract class ResultCommonLogic
         if (isFailure)
         {
             if (string.IsNullOrWhiteSpace(message))
-                throw new ArgumentNullException("message", "There must be error message for failure.");
+                throw new ArgumentNullException("message", CommonErrorMessages.FailureMessageRequired);
             if (resultType == ResultType.Ok)
-                throw new ArgumentException("There should be error type for failure.", "resultType");
+                throw new ArgumentException(CommonErrorMessages.FailureTypeRequired, "resultType");
         }
         else
         {
             if (!string.IsNullOrWhiteSpace(message))
-                throw new ArgumentException("There should be no error message for success.", "message");
+                throw new ArgumentException(CommonErrorMessages.SuccessCannotHaveMessage, "message");
             if (resultType != ResultType.Ok)
-                throw new ArgumentException("There should be no error type for success.", "resultType");
+                throw new ArgumentException(CommonErrorMessages.SuccessCannotHaveErrorType, "resultType");
         }
 
         ResultType = resultType;

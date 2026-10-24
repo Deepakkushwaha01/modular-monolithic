@@ -19,4 +19,10 @@
   </PackageReference>
   </ItemGroup>
 
+
+    <ItemGroup>
+    <ProjectReference Include="../App.Core.Domain/App.Core.Domain.csproj" />
+    <ProjectReference Include="../App.Core.SharedLibrary/App.Core.SharedLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

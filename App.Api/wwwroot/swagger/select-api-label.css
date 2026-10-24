@@ -1,0 +1,47 @@
+.swagger-ui .topbar .wrapper {
+    align-items: center;
+}
+
+.swagger-ui .swagger-api-selector {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.swagger-ui .swagger-api-selector__field {
+    align-items: center;
+    color: #fff;
+    display: flex;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.swagger-ui .swagger-api-selector select {
+    border: 2px solid #85c642;
+    border-radius: 4px;
+    color: #3b4151;
+    font-size: 16px;
+    font-weight: 600;
+    height: 40px;
+    min-width: 145px;
+    padding: 0 34px 0 12px;
+}
+
+@media (max-width: 768px) {
+    .swagger-ui .swagger-api-selector {
+        margin: 12px 0 0;
+        width: 100%;
+    }
+
+    .swagger-ui .swagger-api-selector__field {
+        flex: 1;
+    }
+
+    .swagger-ui .swagger-api-selector select {
+        min-width: 0;
+        width: 100%;
+    }
+}

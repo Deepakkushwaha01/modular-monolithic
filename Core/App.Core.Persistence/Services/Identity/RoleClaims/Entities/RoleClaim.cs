@@ -12,4 +12,27 @@ public class RoleClaim : TrackedEntity
 
     public Role Role { get; protected internal set; } = null!;
     public ClaimType ClaimType { get; protected internal set; } = null!;
+
+    public static RoleClaim Create(
+        long id,
+        Guid uid,
+        long roleId,
+        long claimTypeId,
+        string claimValue,
+        DateTime createdAt,
+        DateTime createdOn,
+        DateTime? updatedOn)
+    {
+        return new RoleClaim
+        {
+            Id = id,
+            Uid = uid,
+            RoleId = roleId,
+            ClaimTypeId = claimTypeId,
+            ClaimValue = claimValue,
+            CreatedAt = createdAt,
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
+        };
+    }
 }

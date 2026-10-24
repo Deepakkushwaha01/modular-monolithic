@@ -1,10 +1,11 @@
-using App.Core.Persistence.Configurations.Entity;
-using App.Core.Persistence.Identity.Addresses.Entities;
-using App.Core.Persistence.Identity.Claims.Entities;
-using App.Core.Persistence.Identity.Roles.Entities;
-
 namespace App.Core.Persistence.Identity.Users.Entities
 {
+    using App.Core.Persistence.Configurations.Entity;
+    using App.Core.Persistence.Identity.Addresses.Entities;
+    using App.Core.Persistence.Identity.Claims.Entities;
+    using App.Core.Persistence.Identity.Roles.Entities;
+
+
     public class User : TrackedEntity
     {
         public ICollection<Address> Addresses { get; protected internal set; } = new List<Address>();
@@ -21,7 +22,7 @@ namespace App.Core.Persistence.Identity.Users.Entities
 
         public string? LastName { get; protected internal set; }
 
-        public string? Phone { get; protected internal set; }
+        public string Phone { get; protected internal set; } = string.Empty;
 
         public bool IsPhoneVerified { get; protected internal set; }
 
@@ -42,14 +43,16 @@ namespace App.Core.Persistence.Identity.Users.Entities
             string password,
             string? firstName,
             string? lastName,
-            string? phone,
+            string phone,
             bool isPhoneVerified,
             bool isActive,
+            bool isBlocked,
             bool isEmailVerified,
             DateTime? lastLoginDate,
             string? profilePhoto,
             DateTime createdOn,
-            DateTime? updatedOn)
+            DateTime? updatedOn,
+            string createdBy)
         {
             return new User
             {
@@ -62,12 +65,13 @@ namespace App.Core.Persistence.Identity.Users.Entities
                 Phone = phone,
                 IsPhoneVerified = isPhoneVerified,
                 IsActive = isActive,
-                IsBlocked = false,
+                IsBlocked = isBlocked,
                 IsEmailVerified = isEmailVerified,
                 LastLoginDate = lastLoginDate,
                 ProfilePhoto = profilePhoto,
                 CreatedOn = createdOn,
-                UpdatedOn = updatedOn
+                UpdatedOn = updatedOn,
+                CreatedBy = createdBy
             };
         }
     }

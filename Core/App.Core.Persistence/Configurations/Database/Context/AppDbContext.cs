@@ -5,14 +5,19 @@ namespace App.Core.Persistence.Configurations.Database.Context
 
     public class AppDbContext : DbContext, IAppDbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        private readonly bool _loadSeedData;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, AppDbContextSeedOptions seedOptions) : base(options)
+        {
+            _loadSeedData = seedOptions.LoadSeedData;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             //Identity Configurations
-            modelBuilder.ConfigureIdentity();
+            modelBuilder.ConfigureIdentity(_loadSeedData);
 
         }
 

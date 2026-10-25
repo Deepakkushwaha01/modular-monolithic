@@ -12,8 +12,6 @@ public sealed class CreateUserRequest
     public string Email { get; init; } = string.Empty;
 
     [Required(ErrorMessage = IdentityErrorMessages.PasswordRequired)]
-    [MaxLength(UserConfigurations.PasswordMaximumLength, ErrorMessage = IdentityErrorMessages.PasswordTooLong)]
-    [MinLength(UserConfigurations.PasswordMinimumLength, ErrorMessage = IdentityErrorMessages.PasswordTooShort)]
     public string Password { get; init; } = string.Empty;
 
     [MaxLength(UserConfigurations.FirstNameMaximumLength, ErrorMessage = IdentityErrorMessages.FirstNameTooLong)]

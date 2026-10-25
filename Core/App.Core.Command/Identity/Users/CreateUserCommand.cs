@@ -18,7 +18,7 @@ public class CreateUserCommand : ICommand<Result<Guid>>
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string Phone { get; set; }
-    
+
     public CreateUserCommand(
         string email,
         string password,
@@ -55,9 +55,6 @@ public sealed class CreateUserCommandHandler(
             return Result.Invalid<Guid>(IdentityErrorMessages.EmailInvalid);
         }
 
-        if (email.Length > UserConfigurations.EmailMaximumLength)
-            return Result.Invalid<Guid>(IdentityErrorMessages.EmailTooLong);
-
         if (password.Length < UserConfigurations.PasswordMinimumLength ||
             password.Length > UserConfigurations.PasswordMaximumLength)
         {
@@ -67,13 +64,6 @@ public sealed class CreateUserCommandHandler(
                 UserConfigurations.PasswordMinimumLength,
                 UserConfigurations.PasswordMaximumLength));
         }
-
-        if (command.FirstName?.Length > UserConfigurations.FirstNameMaximumLength)
-            return Result.Invalid<Guid>(IdentityErrorMessages.FirstNameTooLong);
-        if (command.LastName?.Length > UserConfigurations.LastNameMaximumLength)
-            return Result.Invalid<Guid>(IdentityErrorMessages.LastNameTooLong);
-        if (rawPhone.Length > UserConfigurations.PhoneMaxLength)
-            return Result.Invalid<Guid>(IdentityErrorMessages.PhoneTooLong);
 
         if (!PhoneNumberHelper.TryNormalizeToE164(rawPhone, UserConfigurations.DefaultRegion, out string normalizedPhone))
             return Result.Invalid<Guid>(string.IsNullOrWhiteSpace(rawPhone)

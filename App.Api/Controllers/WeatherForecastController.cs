@@ -1,6 +1,7 @@
+using App.API.Controllers.Contracts;
+using App.API.Settings;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using App.API.Settings;
 
 namespace Dotnet.Controllers;
 
@@ -35,7 +36,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
-        FakeResponse data = new FakeResponse
+        FakeResponse data = new()
         {
             Id = id,
             Name = $"User {id}",
@@ -46,7 +47,7 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(FakeRequest request)
+    public IActionResult Create([FromBody] WeatherForecastRequest request)
     {
         return Ok(new
         {
@@ -56,7 +57,7 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public IActionResult Update(int id, FakeRequest request)
+    public IActionResult Update(int id, [FromBody] WeatherForecastRequest request)
     {
         return Ok(new
         {
@@ -73,12 +74,6 @@ public class WeatherForecastController : ControllerBase
             Message = $"Record {id} deleted successfully."
         });
     }
-}
-
-public class FakeRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
 }
 
 public class FakeResponse

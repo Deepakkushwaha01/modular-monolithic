@@ -11,7 +11,7 @@ public class RoleClaimModelConfiguration : IEntityTypeConfiguration<RoleClaim>
     {
         builder.ToTable(nameof(RoleClaim), "Identity");
         builder.HasKey(x => new { x.RoleId, x.ClaimTypeId });
-        
+
         builder.ConfigureTrackedEntity();
 
         builder.Property(x => x.RoleId).HasColumnType("bigint").IsRequired();

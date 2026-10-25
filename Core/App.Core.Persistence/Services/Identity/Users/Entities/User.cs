@@ -52,7 +52,8 @@ namespace App.Core.Persistence.Identity.Users.Entities
             string? profilePhoto,
             DateTime createdOn,
             DateTime? updatedOn,
-            string createdBy)
+            string createdBy,
+            string? updatedBy)
         {
             return new User
             {
@@ -71,7 +72,8 @@ namespace App.Core.Persistence.Identity.Users.Entities
                 ProfilePhoto = profilePhoto,
                 CreatedOn = createdOn,
                 UpdatedOn = updatedOn,
-                CreatedBy = createdBy
+                CreatedBy = createdBy,
+                UpdatedBy = updatedBy
             };
         }
     }

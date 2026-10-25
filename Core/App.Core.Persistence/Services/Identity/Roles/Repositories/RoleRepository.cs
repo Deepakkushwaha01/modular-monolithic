@@ -12,9 +12,9 @@ namespace App.Core.Persistence.Identity.Roles.Repositories;
 
 public interface IRoleRepository : IRepository<PersistenceRole>
 {
-    Task<Result<DomainRole>> GetRoleByUidAsync(Guid uid);
+    Task<Result<DomainRole>> GetRoleByUidAsync(Guid uid, bool includeUsers = false, bool includeClaims = false);
 
-    Task<Result<List<DomainRole>>> GetRolesAsync();
+    Task<Result<List<DomainRole>>> GetRolesAsync(bool includeUsers = false, bool includeClaims = false);
 
     Task<Result> InsertAsync(DomainRole entity);
 
@@ -26,11 +26,14 @@ public interface IRoleRepository : IRepository<PersistenceRole>
 public sealed class RoleRepository(IAppDbContext appDbContext)
     : Repository<PersistenceRole>(appDbContext), IRoleRepository
 {
-    public async Task<Result<DomainRole>> GetRoleByUidAsync(Guid uid)
+    public async Task<Result<DomainRole>> GetRoleByUidAsync(Guid uid, bool includeUsers = false, bool includeClaims = false)
     {
         try
         {
-            PersistenceRole? role = await AllNoTrackedOf().FirstOrDefaultAsync(x => x.Uid == uid);
+            IQueryable<PersistenceRole> query = AllNoTrackedOf();
+            if (includeUsers) query = query.Include(x => x.UserRoles);
+            if (includeClaims) query = query.Include(x => x.RoleClaims);
+            PersistenceRole? role = await query.FirstOrDefaultAsync(x => x.Uid == uid);
             return role == null
                 ? Result.NotFound<DomainRole>(PersistenceErrorMessages.EntityNotFound)
                 : Result.Ok(role.ToRoleDomain());
@@ -41,13 +44,15 @@ public sealed class RoleRepository(IAppDbContext appDbContext)
         }
     }
 
-    public async Task<Result<List<DomainRole>>> GetRolesAsync()
+    public async Task<Result<List<DomainRole>>> GetRolesAsync(bool includeUsers = false, bool includeClaims = false)
     {
         try
         {
-            List<DomainRole> roles = await AllNoTrackedOf()
-                .Select(x => x.ToRoleDomain())
-                .ToListAsync();
+            IQueryable<PersistenceRole> query = AllNoTrackedOf();
+            if (includeUsers) query = query.Include(x => x.UserRoles);
+            if (includeClaims) query = query.Include(x => x.RoleClaims);
+            List<PersistenceRole> entities = await query.ToListAsync();
+            List<DomainRole> roles = entities.Select(x => x.ToRoleDomain()).ToList();
 
             return Result.Ok(roles);
         }

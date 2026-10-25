@@ -11,7 +11,7 @@ public class UserClaimModelConfiguration : IEntityTypeConfiguration<UserClaim>
     {
         builder.ToTable(nameof(UserClaim), "Identity");
         builder.ConfigureTrackedEntity();
-        
+
         builder.HasKey(x => new { x.UserId, x.ClaimTypeId });
         builder.Property(x => x.UserId).HasColumnType("bigint").IsRequired();
         builder.Property(x => x.ClaimTypeId).HasColumnType("bigint").IsRequired();

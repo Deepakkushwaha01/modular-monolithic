@@ -29,13 +29,13 @@ namespace App.API.Registers
 
             return builder.Build();
         }
-        
+
         public static void RunApplication(WebApplication app)
         {
             app.UseStaticFiles();
             app.UseSwaggerDocumentation(app.Configuration);
             app.UseHttpsRedirection();
-              app.MapControllers();
+            app.MapControllers();
             app.Run();
         }
     }

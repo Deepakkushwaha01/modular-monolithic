@@ -13,7 +13,7 @@ public class UserRoleModelConfiguration : IEntityTypeConfiguration<UserRole>
         builder.HasKey(x => new { x.UserId, x.RoleId });
 
         builder.ConfigureTrackedEntity();
-        
+
         builder.Property(x => x.UserId).HasColumnType("bigint").IsRequired();
         builder.Property(x => x.RoleId).HasColumnType("bigint").IsRequired();
         builder.Property(x => x.AssignedAt).HasColumnType("timestamp with time zone").HasDefaultValueSql("now()").IsRequired();

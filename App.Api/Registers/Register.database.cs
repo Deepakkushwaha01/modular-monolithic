@@ -17,7 +17,7 @@ public static partial class Register
         // register database context for command
         services.AddDbContext<IAppDbContext, AppDbContext>(options =>
         {
-            options.UseNpgsql(databaseSettings.DefaultDBConnection, 
+            options.UseNpgsql(databaseSettings.DefaultDBConnection,
             npgsqlOptions =>
             {
                 npgsqlOptions.EnableRetryOnFailure();

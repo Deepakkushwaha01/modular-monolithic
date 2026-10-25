@@ -9,7 +9,9 @@ public static class ClaimTypeFactory
 {
     public static DomainClaimType ToClaimTypeDomain(this PersistenceClaimType entity) => DomainClaimType.Create(entity.Id, entity.Uid,
         entity.Name, entity.Description, (DomainClaimDataType)entity.DataType, entity.Module, entity.IsActive,
-        entity.CreatedOn, entity.UpdatedOn);
+        entity.CreatedOn, entity.UpdatedOn,
+        entity.RoleClaims.Select(x => x.ToRoleClaimDomain()),
+        entity.UserClaims.Select(x => x.ToUserClaimDomain()));
 
     public static PersistenceClaimType ToClaimTypeEntity(this DomainClaimType domain) => PersistenceClaimType.Create(domain.Id, domain.Uid,
         domain.Name, domain.Description, (PersistenceClaimDataType)domain.DataType, domain.Module, domain.IsActive,

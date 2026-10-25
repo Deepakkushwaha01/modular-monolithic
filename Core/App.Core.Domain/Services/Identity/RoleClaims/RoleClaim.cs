@@ -10,12 +10,18 @@ public class RoleClaim : DomainEntity
     public string ClaimValue { get; protected set; } = "true";
     public DateTime CreatedAt { get; protected set; }
 
+    public void Update(string claimValue) { ClaimValue = claimValue; MarkModified(); }
+
     public static RoleClaim Create(long roleId, long claimTypeId, string claimValue)
     {
         return new RoleClaim
         {
-            Uid = Guid.NewGuid(), RoleId = roleId, ClaimTypeId = claimTypeId, ClaimValue = claimValue,
-            CreatedAt = DateTime.UtcNow, State = EntityState.Added
+            Uid = Guid.NewGuid(),
+            RoleId = roleId,
+            ClaimTypeId = claimTypeId,
+            ClaimValue = claimValue,
+            CreatedAt = DateTime.UtcNow,
+            State = EntityState.Added
         };
     }
 
@@ -24,8 +30,14 @@ public class RoleClaim : DomainEntity
     {
         return new RoleClaim
         {
-            Id = id, Uid = uid, RoleId = roleId, ClaimTypeId = claimTypeId, ClaimValue = claimValue,
-            CreatedAt = createdAt, CreatedOn = createdOn, UpdatedOn = updatedOn
+            Id = id,
+            Uid = uid,
+            RoleId = roleId,
+            ClaimTypeId = claimTypeId,
+            ClaimValue = claimValue,
+            CreatedAt = createdAt,
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
         };
     }
 }

@@ -30,6 +30,7 @@
   <ProjectReference Include="../Core/App.Core.Command/App.Core.Command.csproj" />
   <ProjectReference Include="../Core/App.Core.Domain/App.Core.Domain.csproj" />
   <ProjectReference Include="../Core/App.Core.Persistence/App.Core.Persistence.csproj" />
+  <ProjectReference Include="../Core/App.Core.Queries/App.Core.Queries.csproj" />
   <ProjectReference Include="../Core/App.Core.SharedLibrary/App.Core.SharedLibrary.csproj" />
 </ItemGroup>
 

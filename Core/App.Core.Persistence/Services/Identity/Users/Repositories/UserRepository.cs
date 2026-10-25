@@ -14,11 +14,20 @@ namespace App.Core.Persistence.Identity.Users.Repositories;
 public sealed class UserRepository(IAppDbContext appDbContext)
     : Repository<PersistenceUser>(appDbContext), IUserRepository
 {
-    public async Task<Result<DomainUser>> GetUserByUidAsync(Guid uid)
+    public async Task<Result<DomainUser>> GetUserByUidAsync(
+        Guid uid,
+        bool includeAddresses = false,
+        bool includeRoles = false,
+        bool includeClaims = false)
     {
         try
         {
-            PersistenceUser? user = await AllNoTrackedOf().FirstOrDefaultAsync(x => x.Uid == uid);
+            IQueryable<PersistenceUser> query = AllNoTrackedOf();
+            if (includeAddresses) query = query.Include(x => x.Addresses);
+            if (includeRoles) query = query.Include(x => x.UserRoles);
+            if (includeClaims) query = query.Include(x => x.UserClaims);
+
+            PersistenceUser? user = await query.FirstOrDefaultAsync(x => x.Uid == uid);
             return user == null
                 ? Result.NotFound<DomainUser>(PersistenceErrorMessages.EntityNotFound)
                 : Result.Ok(user.ToUserDomain());
@@ -29,13 +38,20 @@ public sealed class UserRepository(IAppDbContext appDbContext)
         }
     }
 
-    public async Task<Result<List<DomainUser>>> GetUsersAsync()
+    public async Task<Result<List<DomainUser>>> GetUsersAsync(
+        bool includeAddresses = false,
+        bool includeRoles = false,
+        bool includeClaims = false)
     {
         try
         {
-            List<DomainUser> users = await AllNoTrackedOf()
-                .Select(x => x.ToUserDomain())
-                .ToListAsync();
+            IQueryable<PersistenceUser> query = AllNoTrackedOf();
+            if (includeAddresses) query = query.Include(x => x.Addresses);
+            if (includeRoles) query = query.Include(x => x.UserRoles);
+            if (includeClaims) query = query.Include(x => x.UserClaims);
+
+            List<PersistenceUser> entities = await query.ToListAsync();
+            List<DomainUser> users = entities.Select(x => x.ToUserDomain()).ToList();
 
             return Result.Ok(users);
         }

@@ -7,9 +7,16 @@ namespace App.Core.Persistence.Identity.Users.Repositories;
 
 public interface IUserRepository : IRepository<PersistenceUser>
 {
-    Task<Result<DomainUser>> GetUserByUidAsync(Guid uid);
+    Task<Result<DomainUser>> GetUserByUidAsync(
+        Guid uid,
+        bool includeAddresses = false,
+        bool includeRoles = false,
+        bool includeClaims = false);
 
-    Task<Result<List<DomainUser>>> GetUsersAsync();
+    Task<Result<List<DomainUser>>> GetUsersAsync(
+        bool includeAddresses = false,
+        bool includeRoles = false,
+        bool includeClaims = false);
 
     Task<bool> EmailExistsAsync(string email);
 

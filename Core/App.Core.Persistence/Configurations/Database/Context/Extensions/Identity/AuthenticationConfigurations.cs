@@ -1,6 +1,7 @@
 namespace App.Core.Persistence.Configurations.Database.Context.Extensions.Identity
 {
     using App.Core.Persistence.Configurations.Database.ModelConfigurations.Identity;
+    using App.Core.Persistence.Configurations.Database.Context.Extensions.Identity.Seeds;
     using Microsoft.EntityFrameworkCore;
 
     public static class IdentityConfigurations

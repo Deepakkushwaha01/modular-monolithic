@@ -9,11 +9,16 @@ public class UserClaim : DomainEntity
     public long ClaimTypeId { get; protected set; }
     public string ClaimValue { get; protected set; } = "true";
 
+    public void Update(string claimValue) { ClaimValue = claimValue; MarkModified(); }
+
     public static UserClaim Create(long userId, long claimTypeId, string claimValue)
     {
         return new UserClaim
         {
-            Uid = Guid.NewGuid(), UserId = userId, ClaimTypeId = claimTypeId, ClaimValue = claimValue,
+            Uid = Guid.NewGuid(),
+            UserId = userId,
+            ClaimTypeId = claimTypeId,
+            ClaimValue = claimValue,
             State = EntityState.Added
         };
     }
@@ -23,8 +28,13 @@ public class UserClaim : DomainEntity
     {
         return new UserClaim
         {
-            Id = id, Uid = uid, UserId = userId, ClaimTypeId = claimTypeId, ClaimValue = claimValue,
-            CreatedOn = createdOn, UpdatedOn = updatedOn
+            Id = id,
+            Uid = uid,
+            UserId = userId,
+            ClaimTypeId = claimTypeId,
+            ClaimValue = claimValue,
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
         };
     }
 }

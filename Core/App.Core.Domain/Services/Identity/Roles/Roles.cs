@@ -33,7 +33,7 @@ namespace App.Core.Domain.Identity.Roles
             MarkModified();
         }
 
-        public void UpdateDescription(string description)
+        public void UpdateDescription(string? description)
         {
             Description = description;
 

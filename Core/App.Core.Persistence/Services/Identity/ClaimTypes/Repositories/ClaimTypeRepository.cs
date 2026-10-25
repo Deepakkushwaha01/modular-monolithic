@@ -12,9 +12,9 @@ namespace App.Core.Persistence.Identity.Claims.Repositories;
 
 public interface IClaimTypeRepository : IRepository<PersistenceClaimType>
 {
-    Task<Result<DomainClaimType>> GetClaimTypeByUidAsync(Guid uid);
+    Task<Result<DomainClaimType>> GetClaimTypeByUidAsync(Guid uid, bool includeRoleClaims = false, bool includeUserClaims = false);
 
-    Task<Result<List<DomainClaimType>>> GetClaimTypesAsync();
+    Task<Result<List<DomainClaimType>>> GetClaimTypesAsync(bool includeRoleClaims = false, bool includeUserClaims = false);
 
     Task<Result> InsertAsync(DomainClaimType entity);
 
@@ -26,11 +26,14 @@ public interface IClaimTypeRepository : IRepository<PersistenceClaimType>
 public sealed class ClaimTypeRepository(IAppDbContext appDbContext)
     : Repository<PersistenceClaimType>(appDbContext), IClaimTypeRepository
 {
-    public async Task<Result<DomainClaimType>> GetClaimTypeByUidAsync(Guid uid)
+    public async Task<Result<DomainClaimType>> GetClaimTypeByUidAsync(Guid uid, bool includeRoleClaims = false, bool includeUserClaims = false)
     {
         try
         {
-            PersistenceClaimType? claimType = await AllNoTrackedOf().FirstOrDefaultAsync(x => x.Uid == uid);
+            IQueryable<PersistenceClaimType> query = AllNoTrackedOf();
+            if (includeRoleClaims) query = query.Include(x => x.RoleClaims);
+            if (includeUserClaims) query = query.Include(x => x.UserClaims);
+            PersistenceClaimType? claimType = await query.FirstOrDefaultAsync(x => x.Uid == uid);
             return claimType == null
                 ? Result.NotFound<DomainClaimType>(PersistenceErrorMessages.EntityNotFound)
                 : Result.Ok(claimType.ToClaimTypeDomain());
@@ -41,13 +44,15 @@ public sealed class ClaimTypeRepository(IAppDbContext appDbContext)
         }
     }
 
-    public async Task<Result<List<DomainClaimType>>> GetClaimTypesAsync()
+    public async Task<Result<List<DomainClaimType>>> GetClaimTypesAsync(bool includeRoleClaims = false, bool includeUserClaims = false)
     {
         try
         {
-            List<DomainClaimType> claimTypes = await AllNoTrackedOf()
-                .Select(x => x.ToClaimTypeDomain())
-                .ToListAsync();
+            IQueryable<PersistenceClaimType> query = AllNoTrackedOf();
+            if (includeRoleClaims) query = query.Include(x => x.RoleClaims);
+            if (includeUserClaims) query = query.Include(x => x.UserClaims);
+            List<PersistenceClaimType> entities = await query.ToListAsync();
+            List<DomainClaimType> claimTypes = entities.Select(x => x.ToClaimTypeDomain()).ToList();
 
             return Result.Ok(claimTypes);
         }

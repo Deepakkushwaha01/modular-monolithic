@@ -3,7 +3,7 @@ using Asp.Versioning;
 using App.Core.SharedLibrary.Patterns.Mediatr.Abstractions;
 using App.Core.SharedLibrary.Patterns.Result;
 using App.Core.Command.Identity.Users;
-using App.Core.Command.Identity.Users.Queries;
+using App.Core.Queries.Identity.Users;
 using App.Core.Domain.Identity.Users;
 using App.API.Settings;
 using App.API.Controllers.Identity.Contracts;
@@ -52,15 +52,17 @@ public class IdentityController : ControllerBase
     }
 
     [HttpGet("users/{uid:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetUser(Guid uid)
+    public async Task<IActionResult> GetUser(
+        Guid uid,
+        [FromQuery] bool includeAddresses = false)
     {
-        Result<User> result = await _queryDispatcher.ExecuteAsync(new GetUserByUidQuery(uid));
+        Result<User> result = await _queryDispatcher.ExecuteAsync(new GetUserByUidQuery(uid, includeAddresses));
         if (result.IsFailure)
             return StatusCode((int)result.HttpStatusCode, result.Message);
 
-        return Ok(result.Value);
+        return Ok(UserResponse.From(result.Value, includeAddresses));
     }
 
     [HttpPut("users/{uid:guid}")]

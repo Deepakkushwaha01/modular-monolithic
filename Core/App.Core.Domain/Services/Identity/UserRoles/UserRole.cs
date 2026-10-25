@@ -10,12 +10,18 @@ public class UserRole : DomainEntity
     public DateTime AssignedAt { get; protected set; }
     public long? AssignedBy { get; protected set; }
 
+    public void UpdateAssignedBy(long? assignedBy) { AssignedBy = assignedBy; MarkModified(); }
+
     public static UserRole Create(long userId, long roleId, long? assignedBy = null)
     {
         return new UserRole
         {
-            Uid = Guid.NewGuid(), UserId = userId, RoleId = roleId, AssignedAt = DateTime.UtcNow,
-            AssignedBy = assignedBy, State = EntityState.Added
+            Uid = Guid.NewGuid(),
+            UserId = userId,
+            RoleId = roleId,
+            AssignedAt = DateTime.UtcNow,
+            AssignedBy = assignedBy,
+            State = EntityState.Added
         };
     }
 
@@ -24,8 +30,14 @@ public class UserRole : DomainEntity
     {
         return new UserRole
         {
-            Id = id, Uid = uid, UserId = userId, RoleId = roleId, AssignedAt = assignedAt, AssignedBy = assignedBy,
-            CreatedOn = createdOn, UpdatedOn = updatedOn
+            Id = id,
+            Uid = uid,
+            UserId = userId,
+            RoleId = roleId,
+            AssignedAt = assignedAt,
+            AssignedBy = assignedBy,
+            CreatedOn = createdOn,
+            UpdatedOn = updatedOn
         };
     }
 }

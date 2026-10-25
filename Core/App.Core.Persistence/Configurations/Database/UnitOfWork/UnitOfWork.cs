@@ -33,16 +33,16 @@ namespace App.Core.Persistence.Configurations.Database.Context.UnitOfWork
         }
 
         public async Task<Result> SaveChangesAsync()
-    {
-        try
         {
-            await _appDbContext.SaveChangesAsync();
-            return Result.Ok();
+            try
+            {
+                await _appDbContext.SaveChangesAsync();
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failed(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            return Result.Failed(ex.Message);
-        }
-    }
     }
 }

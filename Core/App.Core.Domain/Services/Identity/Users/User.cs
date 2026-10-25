@@ -194,6 +194,8 @@ namespace App.Core.Domain.Identity.Users
             string? profilePhoto,
             DateTime createdOn,
             DateTime? updatedOn,
+            string createdBy,
+            string? updatedBy,
             IEnumerable<Address>? addresses = null,
             IEnumerable<UserRole>? userRoles = null,
             IEnumerable<UserClaim>? userClaims = null)
@@ -220,6 +222,9 @@ namespace App.Core.Domain.Identity.Users
 
                 CreatedOn = createdOn,
                 UpdatedOn = updatedOn,
+
+                CreatedBy = createdBy,
+                UpdatedBy = updatedBy,
 
                 Addresses = addresses?.ToList()
                     ?? new List<Address>(),

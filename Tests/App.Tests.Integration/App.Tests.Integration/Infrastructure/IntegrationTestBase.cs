@@ -88,21 +88,21 @@ public abstract class IntegrationTestBase
         return (claimType, id);
     }
 
-    protected async Task SeedRoleClaimAsync(long roleId, long claimTypeId, string value = "true")
+    protected async Task SeedRoleClaimAsync(Guid roleUid, Guid claimTypeUid, string value = "true")
     {
-        Assert.That((await RoleClaims.InsertAsync(RoleClaim.Create(roleId, claimTypeId, value))).IsSuccess, Is.True);
+        Assert.That((await RoleClaims.InsertAsync(RoleClaim.Create(roleUid, claimTypeUid, value))).IsSuccess, Is.True);
         Assert.That((await UnitOfWork.SaveChangesAsync()).IsSuccess, Is.True);
     }
 
-    protected async Task SeedUserClaimAsync(long userId, long claimTypeId, string value = "true")
+    protected async Task SeedUserClaimAsync(Guid userUid, Guid claimTypeUid, string value = "true")
     {
-        Assert.That((await UserClaims.InsertAsync(UserClaim.Create(userId, claimTypeId, value))).IsSuccess, Is.True);
+        Assert.That((await UserClaims.InsertAsync(UserClaim.Create(userUid, claimTypeUid, value))).IsSuccess, Is.True);
         Assert.That((await UnitOfWork.SaveChangesAsync()).IsSuccess, Is.True);
     }
 
-    protected async Task SeedUserRoleAsync(long userId, long roleId)
+    protected async Task SeedUserRoleAsync(Guid userUid, Guid roleUid)
     {
-        Assert.That((await UserRoles.InsertAsync(UserRole.Create(userId, roleId))).IsSuccess, Is.True);
+        Assert.That((await UserRoles.InsertAsync(UserRole.Create(userUid, roleUid))).IsSuccess, Is.True);
         Assert.That((await UnitOfWork.SaveChangesAsync()).IsSuccess, Is.True);
     }
 

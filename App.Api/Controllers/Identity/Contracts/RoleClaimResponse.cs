@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace App.API.Controllers.Identity.Contracts;
 
-public sealed record RoleClaimResponse(Guid Uid, long RoleId, long ClaimTypeId, string ClaimValue, DateTime CreatedAt)
+public sealed record RoleClaimResponse(Guid Uid, Guid RoleId, Guid ClaimTypeId, string ClaimValue, DateTime CreatedAt)
 {
     public static RoleClaimResponse From(RoleClaim item) => new(item.Uid, item.RoleId, item.ClaimTypeId, item.ClaimValue, item.CreatedAt);
 }

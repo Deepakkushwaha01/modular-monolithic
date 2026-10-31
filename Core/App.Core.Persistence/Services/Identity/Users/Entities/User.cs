@@ -4,6 +4,7 @@ namespace App.Core.Persistence.Identity.Users.Entities
     using App.Core.Persistence.Identity.Addresses.Entities;
     using App.Core.Persistence.Identity.Claims.Entities;
     using App.Core.Persistence.Identity.Roles.Entities;
+    using App.Core.SharedLibrary.Enums;
 
 
     public class User : TrackedEntity
@@ -32,6 +33,8 @@ namespace App.Core.Persistence.Identity.Users.Entities
 
         public bool IsEmailVerified { get; protected internal set; }
 
+        public Portal Portal { get; protected internal set; } = Portal.UserPortal;
+
         public DateTime? LastLoginDate { get; protected internal set; }
 
         public string? ProfilePhoto { get; protected internal set; }
@@ -48,6 +51,7 @@ namespace App.Core.Persistence.Identity.Users.Entities
             bool isActive,
             bool isBlocked,
             bool isEmailVerified,
+            Portal portal,
             DateTime? lastLoginDate,
             string? profilePhoto,
             DateTime createdOn,
@@ -69,6 +73,7 @@ namespace App.Core.Persistence.Identity.Users.Entities
                 IsBlocked = isBlocked,
                 IsEmailVerified = isEmailVerified,
                 LastLoginDate = lastLoginDate,
+                Portal = portal,
                 ProfilePhoto = profilePhoto,
                 CreatedOn = createdOn,
                 UpdatedOn = updatedOn,

@@ -1,3 +1,5 @@
+using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Users;
 using App.Core.Queries.Identity.Claims;
 
 namespace App.Tests.Integration.Queries.Claims;
@@ -7,7 +9,7 @@ public sealed class GetUserClaimsQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsEmptyListWhenNoClaimsExist()
     {
-        var result = await new GetUserClaimsQueryHandler(UserClaims).ExecuteAsync(new());
+        Result<List<UserClaim>> result = await new GetUserClaimsQueryHandler(UserClaims).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Is.Empty);
@@ -16,11 +18,11 @@ public sealed class GetUserClaimsQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsAllUserClaims()
     {
-        var user = await SeedUserAsync();
-        var claimType = await SeedClaimTypeAsync();
-        await SeedUserClaimAsync(user.Id, claimType.Id, "premium");
+        (User Entity, long Id) user = await SeedUserAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
+        await SeedUserClaimAsync(user.Entity.Uid, claimType.Entity.Uid, "premium");
 
-        var result = await new GetUserClaimsQueryHandler(UserClaims).ExecuteAsync(new());
+        Result<List<UserClaim>> result = await new GetUserClaimsQueryHandler(UserClaims).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Has.Count.EqualTo(1));

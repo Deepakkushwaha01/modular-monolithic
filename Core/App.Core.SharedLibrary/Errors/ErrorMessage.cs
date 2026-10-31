@@ -49,10 +49,10 @@ public sealed class IdentityErrorMessages : ErrorMessage
     public const string RoleNameTooLong = "Role name cannot exceed 50 characters.";
     public const string RoleSlugTooLong = "Role slug cannot exceed 50 characters.";
     public const string RoleDescriptionTooLong = "Role description cannot exceed 255 characters.";
-    public const string UserIdMustBePositive = "User ID must be positive.";
-    public const string RoleIdMustBePositive = "Role ID must be positive.";
-    public const string ClaimTypeIdMustBePositive = "Claim type ID must be positive.";
-    public const string AssignedByMustBePositive = "AssignedBy must be a positive user ID.";
+    public const string UserUidRequired = "User UID cannot be empty.";
+    public const string RoleUidRequired = "Role UID cannot be empty.";
+    public const string ClaimTypeUidRequired = "Claim type UID cannot be empty.";
+    public const string AssignedByUidRequired = "AssignedBy UID cannot be empty.";
     public const string ClaimValueRequired = "Claim value is required.";
     public const string ClaimValueTooLong = "Claim value cannot exceed 255 characters.";
     public const string AssignmentCannotBeChanged = "Assignment identifiers cannot be changed; delete and recreate the assignment.";
@@ -61,6 +61,8 @@ public sealed class IdentityErrorMessages : ErrorMessage
     public const string SystemRoleCannotBeDeleted = "System roles cannot be deleted.";
     public const string SystemRoleCannotBeBlocked = "System roles cannot be blocked.";
     public const string SystemRoleCannotBeChanged = "System roles cannot be renamed or changed here.";
+
+    public const string InvalidEmailOrPassword = "Invalid email or password.";
 }
 
 public sealed class PersistenceErrorMessages : ErrorMessage

@@ -7,12 +7,14 @@ using App.Core.SharedLibrary.Errors;
 
 namespace App.Core.Command.Identity.Claims;
 
-public sealed record CreateUserClaimCommand(long UserId, long ClaimTypeId, string ClaimValue) : ICommand<Result<Guid>>;
+public sealed record CreateUserClaimCommand(Guid UserId, Guid ClaimTypeId, string ClaimValue) : ICommand<Result<Guid>>;
 
 public sealed class CreateUserClaimCommandHandler(IUserClaimRepository repository, IUnitOfWork unitOfWork) : ICommandHandler<CreateUserClaimCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> ExecuteAsync(CreateUserClaimCommand command, CancellationToken cancellationToken = default)
     {
+        if (command.UserId == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.UserUidRequired);
+        if (command.ClaimTypeId == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.ClaimTypeUidRequired);
         UserClaim entity = UserClaim.Create(command.UserId, command.ClaimTypeId, command.ClaimValue.Trim());
         Result inserted = await repository.InsertAsync(entity);
         if (inserted.IsFailure) return Result.FromError<Guid>(inserted);

@@ -5,6 +5,7 @@ namespace App.Core.Domain.Identity.Users
     using App.Core.Domain.Identity.Addresses;
     using App.Core.Domain.Identity.Claims;
     using App.Core.Domain.Identity.Roles;
+    using App.Core.SharedLibrary.Enums;
 
     public class User : DomainEntity
     {
@@ -28,7 +29,13 @@ namespace App.Core.Domain.Identity.Users
 
         public DateTime? LastLoginDate { get; protected set; }
 
+        public Portal Portal { get; protected set; }
+
         public string? ProfilePhoto { get; protected set; }
+
+        public List<string> Roles { get; protected internal set; } = new List<string>();
+
+        public List<string> Claims { get; protected internal set; } = new List<string>();
 
         public ICollection<Address> Addresses { get; protected set; }
             = new List<Address>();
@@ -132,6 +139,16 @@ namespace App.Core.Domain.Identity.Users
             MarkModified();
         }
 
+        public void AddRoles(IEnumerable<string> roles)
+        {
+            Roles = roles.ToList();
+        }
+
+        public void AddClaims(IEnumerable<string> claims)
+        {
+            Claims = claims.ToList();
+        }
+
         #endregion
 
 
@@ -141,6 +158,7 @@ namespace App.Core.Domain.Identity.Users
             string email,
             string password,
             string phone,
+            Portal portal,
             string? firstName = null,
             string? lastName = null)
         {
@@ -150,6 +168,7 @@ namespace App.Core.Domain.Identity.Users
 
                 Email = email,
                 Password = password,
+                Portal = portal,
 
                 FirstName = firstName,
                 LastName = lastName,
@@ -186,6 +205,7 @@ namespace App.Core.Domain.Identity.Users
             string? firstName,
             string? lastName,
             string phone,
+            Portal portal,
             bool isPhoneVerified,
             bool isActive,
             bool isBlocked,
@@ -211,6 +231,7 @@ namespace App.Core.Domain.Identity.Users
                 FirstName = firstName,
                 LastName = lastName,
                 Phone = phone,
+                Portal = portal,
 
                 IsPhoneVerified = isPhoneVerified,
                 IsActive = isActive,

@@ -35,6 +35,8 @@ namespace App.API.Registers
             app.UseStaticFiles();
             app.UseSwaggerDocumentation(app.Configuration);
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.MapControllers();
             app.Run();
         }

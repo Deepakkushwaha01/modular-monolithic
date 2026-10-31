@@ -5,14 +5,14 @@ namespace App.Core.Domain.Identity.Roles;
 
 public class UserRole : DomainEntity
 {
-    public long UserId { get; protected set; }
-    public long RoleId { get; protected set; }
+    public Guid UserId { get; protected set; }
+    public Guid RoleId { get; protected set; }
     public DateTime AssignedAt { get; protected set; }
-    public long? AssignedBy { get; protected set; }
+    public Guid? AssignedBy { get; protected set; }
 
-    public void UpdateAssignedBy(long? assignedBy) { AssignedBy = assignedBy; MarkModified(); }
+    public void UpdateAssignedBy(Guid? assignedBy) { AssignedBy = assignedBy; MarkModified(); }
 
-    public static UserRole Create(long userId, long roleId, long? assignedBy = null)
+    public static UserRole Create(Guid userId, Guid roleId, Guid? assignedBy = null)
     {
         return new UserRole
         {
@@ -25,7 +25,7 @@ public class UserRole : DomainEntity
         };
     }
 
-    public static UserRole Create(long id, Guid uid, long userId, long roleId, DateTime assignedAt, long? assignedBy,
+    public static UserRole Create(long id, Guid uid, Guid userId, Guid roleId, DateTime assignedAt, Guid? assignedBy,
         DateTime createdOn, DateTime? updatedOn)
     {
         return new UserRole

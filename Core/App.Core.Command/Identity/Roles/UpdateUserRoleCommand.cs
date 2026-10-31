@@ -7,13 +7,13 @@ using App.Core.SharedLibrary.Errors;
 
 namespace App.Core.Command.Identity.Roles;
 
-public sealed record UpdateUserRoleCommand(Guid Uid, long? AssignedBy) : ICommand<Result<Guid>>;
+public sealed record UpdateUserRoleCommand(Guid Uid, Guid? AssignedBy) : ICommand<Result<Guid>>;
 
 public sealed class UpdateUserRoleCommandHandler(IUserRoleRepository repository, IUnitOfWork unitOfWork) : ICommandHandler<UpdateUserRoleCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> ExecuteAsync(UpdateUserRoleCommand command, CancellationToken cancellationToken = default)
     {
-        if (command.AssignedBy is <= 0) return Result.Invalid<Guid>(IdentityErrorMessages.AssignedByMustBePositive);
+        if (command.AssignedBy == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.AssignedByUidRequired);
         Result<UserRole> found = await repository.GetUserRoleByUidAsync(command.Uid);
         if (found.IsFailure) return Result.FromError<Guid>(found);
         found.Value.UpdateAssignedBy(command.AssignedBy);

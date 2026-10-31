@@ -2,6 +2,7 @@
 namespace App.Core.Persistence.Configurations.Database.Context.Extensions.Identity.Seeds;
 
 using Microsoft.EntityFrameworkCore;
+using App.Core.SharedLibrary.Enums;
 
 internal static class UserSeedData
 {
@@ -34,6 +35,7 @@ internal static class UserSeedData
                 IsActive = true,
                 IsBlocked = false,
                 IsEmailVerified = true,
+                Portal = Portal.UserPortal,
                 LastLoginDate = (DateTime?)null,
                 ProfilePhoto = (string?)null,
                 CreatedOn = SeededOn,
@@ -55,6 +57,7 @@ internal static class UserSeedData
                 IsActive = true,
                 IsBlocked = false,
                 IsEmailVerified = true,
+                Portal = Portal.AdminPortal,
                 LastLoginDate = (DateTime?)null,
                 ProfilePhoto = (string?)null,
                 CreatedOn = SeededOn,
@@ -76,6 +79,7 @@ internal static class UserSeedData
                 IsActive = true,
                 IsBlocked = false,
                 IsEmailVerified = true,
+                Portal = Portal.AdminPortal,
                 LastLoginDate = (DateTime?)null,
                 ProfilePhoto = (string?)null,
                 CreatedOn = SeededOn,

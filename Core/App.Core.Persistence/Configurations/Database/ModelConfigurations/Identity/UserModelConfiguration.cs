@@ -4,6 +4,7 @@ namespace App.Core.Persistence.Configurations.Database.ModelConfigurations.Ident
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using App.Core.Persistence.Identity.Users.Entities;
     using App.Core.Persistence.Configurations.Database.ModelConfigurations.Extensions;
+    using App.Core.SharedLibrary.Enums;
 
     public class UserModelConfiguration : IEntityTypeConfiguration<User>
     {
@@ -63,6 +64,12 @@ namespace App.Core.Persistence.Configurations.Database.ModelConfigurations.Ident
             builder.Property(x => x.IsEmailVerified)
                    .HasColumnName("IsEmailVerified")
                    .HasColumnType("boolean")
+                   .IsRequired();
+
+            builder.Property(x => x.Portal)
+                   .HasColumnName("Portal")
+                   .HasColumnType("integer")
+                   .HasDefaultValue(Portal.UserPortal)
                    .IsRequired();
 
             builder.Property(x => x.LastLoginDate)

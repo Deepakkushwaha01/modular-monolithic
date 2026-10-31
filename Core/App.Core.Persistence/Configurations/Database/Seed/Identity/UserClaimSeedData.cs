@@ -42,8 +42,8 @@ internal static class UserClaimSeedData
                     Id = 1L,
                     Uid = Guid.Parse(
                         "70000000-0000-0000-0000-000000000001"),
-                    UserId = 2L,
-                    ClaimTypeId = 3L,
+                    UserId = Guid.Parse("30000000-0000-0000-0000-000000000002"),
+                    ClaimTypeId = Guid.Parse("20000000-0000-0000-0000-000000000003"),
                     ClaimValue = "false",
                     CreatedOn = SeededOn,
                     CreatedBy = "System",
@@ -54,8 +54,8 @@ internal static class UserClaimSeedData
                     Id = 2L,
                     Uid = Guid.Parse(
                         "70000000-0000-0000-0000-000000000002"),
-                    UserId = 3L,
-                    ClaimTypeId = 2L,
+                    UserId = Guid.Parse("30000000-0000-0000-0000-000000000003"),
+                    ClaimTypeId = Guid.Parse("20000000-0000-0000-0000-000000000002"),
                     ClaimValue = "true",
                     CreatedOn = SeededOn,
                     CreatedBy = "System",

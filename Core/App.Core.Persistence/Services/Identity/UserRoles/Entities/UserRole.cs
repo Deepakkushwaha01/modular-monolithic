@@ -5,10 +5,10 @@ namespace App.Core.Persistence.Identity.Roles.Entities;
 
 public class UserRole : TrackedEntity
 {
-    public long UserId { get; protected internal set; }
-    public long RoleId { get; protected internal set; }
+    public Guid UserId { get; protected internal set; }
+    public Guid RoleId { get; protected internal set; }
     public DateTime AssignedAt { get; protected internal set; }
-    public long? AssignedBy { get; protected internal set; }
+    public Guid? AssignedBy { get; protected internal set; }
 
     public User User { get; protected internal set; } = null!;
     public Role Role { get; protected internal set; } = null!;
@@ -17,10 +17,10 @@ public class UserRole : TrackedEntity
     public static UserRole Create(
         long id,
         Guid uid,
-        long userId,
-        long roleId,
+        Guid userId,
+        Guid roleId,
         DateTime assignedAt,
-        long? assignedBy,
+        Guid? assignedBy,
         DateTime createdOn,
         DateTime? updatedOn)
     {

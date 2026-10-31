@@ -7,15 +7,15 @@ using App.Core.SharedLibrary.Errors;
 
 namespace App.Core.Command.Identity.Roles;
 
-public sealed record CreateUserRoleCommand(long UserId, long RoleId, long? AssignedBy) : ICommand<Result<Guid>>;
+public sealed record CreateUserRoleCommand(Guid UserId, Guid RoleId, Guid? AssignedBy) : ICommand<Result<Guid>>;
 
 public sealed class CreateUserRoleCommandHandler(IUserRoleRepository repository, IUnitOfWork unitOfWork) : ICommandHandler<CreateUserRoleCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> ExecuteAsync(CreateUserRoleCommand command, CancellationToken cancellationToken = default)
     {
-        if (command.UserId <= 0) return Result.Invalid<Guid>(IdentityErrorMessages.UserIdMustBePositive);
-        if (command.RoleId <= 0) return Result.Invalid<Guid>(IdentityErrorMessages.RoleIdMustBePositive);
-        if (command.AssignedBy is <= 0) return Result.Invalid<Guid>(IdentityErrorMessages.AssignedByMustBePositive);
+        if (command.UserId == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.UserUidRequired);
+        if (command.RoleId == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.RoleUidRequired);
+        if (command.AssignedBy == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.AssignedByUidRequired);
         UserRole entity = UserRole.Create(command.UserId, command.RoleId, command.AssignedBy);
         Result inserted = await repository.InsertAsync(entity);
         if (inserted.IsFailure) return Result.FromError<Guid>(inserted);

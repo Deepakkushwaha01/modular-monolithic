@@ -10,11 +10,11 @@ public sealed class CreateClaimTypeCommandTests : IntegrationTestBase
     {
         CreateClaimTypeCommandHandler handler = new(ClaimTypes, UnitOfWork);
 
-        var result = await handler.ExecuteAsync(new CreateClaimTypeCommand(
+        Result<Guid> result = await handler.ExecuteAsync(new CreateClaimTypeCommand(
             "  PreferredName  ", "  User profile  ", ClaimDataType.String, "  Identity  "));
 
         Assert.That(result.IsSuccess, Is.True);
-        var saved = await new App.Core.Queries.Identity.Claims.GetClaimTypeByUidQueryHandler(ClaimTypes)
+        Result<ClaimType> saved = await new App.Core.Queries.Identity.Claims.GetClaimTypeByUidQueryHandler(ClaimTypes)
             .ExecuteAsync(new(result.Value));
         Assert.That(saved.IsSuccess, Is.True);
         Assert.That(saved.Value.Name, Is.EqualTo("PreferredName"));
@@ -28,7 +28,7 @@ public sealed class CreateClaimTypeCommandTests : IntegrationTestBase
         await SeedClaimTypeAsync("UniqueClaim");
         CreateClaimTypeCommandHandler handler = new(ClaimTypes, UnitOfWork);
 
-        var result = await handler.ExecuteAsync(new CreateClaimTypeCommand(
+        Result<Guid> result = await handler.ExecuteAsync(new CreateClaimTypeCommand(
             "UniqueClaim", null, ClaimDataType.Boolean, "Tests"));
 
         Assert.That(result.IsFailure, Is.True);

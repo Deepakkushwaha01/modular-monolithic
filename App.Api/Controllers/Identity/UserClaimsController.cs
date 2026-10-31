@@ -32,7 +32,7 @@ public sealed class UserClaimsController(ICommandDispatcher commands, IQueryDisp
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] UserClaimRequest request)
     {
-        Result<Guid> result = await commands.ExecuteAsync(new CreateUserClaimCommand(request.UserId, request.ClaimTypeId, request.ClaimValue));
+        Result<Guid> result = await commands.ExecuteAsync(new CreateUserClaimCommand(request.UserId!.Value, request.ClaimTypeId!.Value, request.ClaimValue));
         return result.IsFailure ? Fail(result) : CreatedAtAction(nameof(Get), new { uid = result.Value }, new { uid = result.Value });
     }
 

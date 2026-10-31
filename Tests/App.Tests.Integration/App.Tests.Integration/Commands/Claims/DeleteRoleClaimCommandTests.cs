@@ -1,5 +1,6 @@
 using App.Core.Command.Identity.Claims;
 using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Roles;
 using App.Core.SharedLibrary.Errors;
 
 namespace App.Tests.Integration.Commands.Claims;
@@ -9,13 +10,13 @@ public sealed class DeleteRoleClaimCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_DeletesExistingRoleClaim()
     {
-        var role = await SeedRoleAsync();
-        var claimType = await SeedClaimTypeAsync();
-        Assert.That((await RoleClaims.InsertAsync(RoleClaim.Create(role.Id, claimType.Id, "true"))).IsSuccess, Is.True);
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
+        Assert.That((await RoleClaims.InsertAsync(RoleClaim.Create(role.Entity.Uid, claimType.Entity.Uid, "true"))).IsSuccess, Is.True);
         Assert.That((await UnitOfWork.SaveChangesAsync()).IsSuccess, Is.True);
-        var claim = (await RoleClaims.GetRoleClaimsAsync()).Value.Single();
+        RoleClaim claim = (await RoleClaims.GetRoleClaimsAsync()).Value.Single();
 
-        var result = await new DeleteRoleClaimCommandHandler(RoleClaims, UnitOfWork)
+        Result result = await new DeleteRoleClaimCommandHandler(RoleClaims, UnitOfWork)
             .ExecuteAsync(new(claim.Uid));
 
         Assert.That(result.IsSuccess, Is.True);
@@ -25,7 +26,7 @@ public sealed class DeleteRoleClaimCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsNotFoundForUnknownRoleClaim()
     {
-        var result = await new DeleteRoleClaimCommandHandler(RoleClaims, UnitOfWork)
+        Result result = await new DeleteRoleClaimCommandHandler(RoleClaims, UnitOfWork)
             .ExecuteAsync(new(Guid.NewGuid()));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.NotFound));

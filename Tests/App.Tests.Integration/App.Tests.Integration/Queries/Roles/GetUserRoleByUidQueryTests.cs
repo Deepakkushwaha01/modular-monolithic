@@ -1,4 +1,5 @@
 using App.Core.Domain.Identity.Roles;
+using App.Core.Domain.Identity.Users;
 using App.Core.Queries.Identity.Roles;
 using App.Core.SharedLibrary.Errors;
 
@@ -9,22 +10,22 @@ public sealed class GetUserRoleByUidQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsUserRole()
     {
-        var user = await SeedUserAsync();
-        var role = await SeedRoleAsync();
-        await SeedUserRoleAsync(user.Id, role.Id);
-        var assignment = (await UserRoles.GetUserRolesAsync()).Value.Single();
+        (User Entity, long Id) user = await SeedUserAsync();
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        await SeedUserRoleAsync(user.Entity.Uid, role.Entity.Uid);
+        UserRole assignment = (await UserRoles.GetUserRolesAsync()).Value.Single();
 
-        var result = await new GetUserRoleByUidQueryHandler(UserRoles).ExecuteAsync(new(assignment.Uid));
+        Result<UserRole> result = await new GetUserRoleByUidQueryHandler(UserRoles).ExecuteAsync(new(assignment.Uid));
 
         Assert.That(result.IsSuccess, Is.True);
-        Assert.That(result.Value.UserId, Is.EqualTo(user.Id));
-        Assert.That(result.Value.RoleId, Is.EqualTo(role.Id));
+        Assert.That(result.Value.UserId, Is.EqualTo(user.Entity.Uid));
+        Assert.That(result.Value.RoleId, Is.EqualTo(role.Entity.Uid));
     }
 
     [Test]
     public async Task ExecuteAsync_ReturnsNotFoundForUnknownUid()
     {
-        var result = await new GetUserRoleByUidQueryHandler(UserRoles).ExecuteAsync(new(Guid.NewGuid()));
+        Result<UserRole> result = await new GetUserRoleByUidQueryHandler(UserRoles).ExecuteAsync(new(Guid.NewGuid()));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.NotFound));
     }

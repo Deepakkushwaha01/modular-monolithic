@@ -32,7 +32,7 @@ public sealed class RoleClaimsController(ICommandDispatcher commands, IQueryDisp
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] RoleClaimRequest request)
     {
-        Result<Guid> result = await commands.ExecuteAsync(new CreateRoleClaimCommand(request.RoleId, request.ClaimTypeId, request.ClaimValue));
+        Result<Guid> result = await commands.ExecuteAsync(new CreateRoleClaimCommand(request.RoleId!.Value, request.ClaimTypeId!.Value, request.ClaimValue));
         return result.IsFailure ? Fail(result) : CreatedAtAction(nameof(Get), new { uid = result.Value }, new { uid = result.Value });
     }
 

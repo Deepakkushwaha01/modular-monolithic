@@ -1,3 +1,6 @@
+using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Roles;
+using App.Core.Domain.Identity.Users;
 using App.Core.Queries.Identity.Roles;
 
 namespace App.Tests.Integration.Queries.Roles;
@@ -7,7 +10,7 @@ public sealed class GetRolesQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsEmptyListWhenNoRolesExist()
     {
-        var result = await new GetRolesQueryHandler(Roles).ExecuteAsync(new());
+        Result<List<Role>> result = await new GetRolesQueryHandler(Roles).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Is.Empty);
@@ -16,13 +19,13 @@ public sealed class GetRolesQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_IncludesRequestedUserAndClaimRelations()
     {
-        var role = await SeedRoleAsync();
-        var user = await SeedUserAsync();
-        var claimType = await SeedClaimTypeAsync();
-        await SeedUserRoleAsync(user.Id, role.Id);
-        await SeedRoleClaimAsync(role.Id, claimType.Id);
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        (User Entity, long Id) user = await SeedUserAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
+        await SeedUserRoleAsync(user.Entity.Uid, role.Entity.Uid);
+        await SeedRoleClaimAsync(role.Entity.Uid, claimType.Entity.Uid);
 
-        var result = await new GetRolesQueryHandler(Roles)
+        Result<List<Role>> result = await new GetRolesQueryHandler(Roles)
             .ExecuteAsync(new(IncludeUsers: true, IncludeClaims: true));
 
         Assert.That(result.IsSuccess, Is.True);

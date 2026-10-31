@@ -7,12 +7,14 @@ using App.Core.SharedLibrary.Errors;
 
 namespace App.Core.Command.Identity.Claims;
 
-public sealed record CreateRoleClaimCommand(long RoleId, long ClaimTypeId, string ClaimValue) : ICommand<Result<Guid>>;
+public sealed record CreateRoleClaimCommand(Guid RoleId, Guid ClaimTypeId, string ClaimValue) : ICommand<Result<Guid>>;
 
 public sealed class CreateRoleClaimCommandHandler(IRoleClaimRepository repository, IUnitOfWork unitOfWork) : ICommandHandler<CreateRoleClaimCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> ExecuteAsync(CreateRoleClaimCommand command, CancellationToken cancellationToken = default)
     {
+        if (command.RoleId == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.RoleUidRequired);
+        if (command.ClaimTypeId == Guid.Empty) return Result.Invalid<Guid>(IdentityErrorMessages.ClaimTypeUidRequired);
         RoleClaim entity = RoleClaim.Create(command.RoleId, command.ClaimTypeId, command.ClaimValue.Trim());
         Result inserted = await repository.InsertAsync(entity);
         if (inserted.IsFailure) return Result.FromError<Guid>(inserted);

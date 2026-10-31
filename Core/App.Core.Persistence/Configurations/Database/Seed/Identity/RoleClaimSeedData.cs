@@ -46,8 +46,8 @@ internal static class RoleClaimSeedData
                 Id = -sequence,
                 Uid = Guid.Parse(
                     $"60000000-0000-0000-0000-{sequence:D12}"),
-                RoleId = role.Key,
-                ClaimTypeId = claimId,
+                RoleId = Guid.Parse($"10000000-0000-0000-0000-{role.Key:D12}"),
+                ClaimTypeId = Guid.Parse($"20000000-0000-0000-0000-{claimId:D12}"),
                 ClaimValue = "true",
                 CreatedAt = seededOn,
                 CreatedOn = seededOn,

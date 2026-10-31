@@ -1,5 +1,6 @@
 using App.API.Settings;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 

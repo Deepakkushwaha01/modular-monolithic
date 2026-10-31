@@ -1,3 +1,5 @@
+using App.Core.Domain.Identity.Roles;
+using App.Core.Domain.Identity.Users;
 using App.Core.Queries.Identity.Roles;
 
 namespace App.Tests.Integration.Queries.Roles;
@@ -7,7 +9,7 @@ public sealed class GetUserRolesQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsEmptyListWhenNoAssignmentsExist()
     {
-        var result = await new GetUserRolesQueryHandler(UserRoles).ExecuteAsync(new());
+        Result<List<UserRole>> result = await new GetUserRolesQueryHandler(UserRoles).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Is.Empty);
@@ -16,15 +18,15 @@ public sealed class GetUserRolesQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsAllAssignments()
     {
-        var user = await SeedUserAsync();
-        var role = await SeedRoleAsync();
-        await SeedUserRoleAsync(user.Id, role.Id);
+        (User Entity, long Id) user = await SeedUserAsync();
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        await SeedUserRoleAsync(user.Entity.Uid, role.Entity.Uid);
 
-        var result = await new GetUserRolesQueryHandler(UserRoles).ExecuteAsync(new());
+        Result<List<UserRole>> result = await new GetUserRolesQueryHandler(UserRoles).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Has.Count.EqualTo(1));
-        Assert.That(result.Value[0].UserId, Is.EqualTo(user.Id));
-        Assert.That(result.Value[0].RoleId, Is.EqualTo(role.Id));
+        Assert.That(result.Value[0].UserId, Is.EqualTo(user.Entity.Uid));
+        Assert.That(result.Value[0].RoleId, Is.EqualTo(role.Entity.Uid));
     }
 }

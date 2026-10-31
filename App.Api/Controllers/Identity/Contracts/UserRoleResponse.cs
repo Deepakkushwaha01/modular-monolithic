@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace App.API.Controllers.Identity.Contracts;
 
-public sealed record UserRoleResponse(Guid Uid, long UserId, long RoleId, DateTime AssignedAt, long? AssignedBy)
+public sealed record UserRoleResponse(Guid Uid, Guid UserId, Guid RoleId, DateTime AssignedAt, Guid? AssignedBy)
 {
     public static UserRoleResponse From(UserRole item) => new(item.Uid, item.UserId, item.RoleId, item.AssignedAt, item.AssignedBy);
 }

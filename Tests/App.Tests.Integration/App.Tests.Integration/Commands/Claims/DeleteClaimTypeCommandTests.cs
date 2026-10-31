@@ -9,9 +9,9 @@ public sealed class DeleteClaimTypeCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_DeletesExistingClaimType()
     {
-        var seeded = await SeedClaimTypeAsync();
+        (ClaimType Entity, long Id) seeded = await SeedClaimTypeAsync();
 
-        var result = await new DeleteClaimTypeCommandHandler(ClaimTypes, UnitOfWork)
+        Result result = await new DeleteClaimTypeCommandHandler(ClaimTypes, UnitOfWork)
             .ExecuteAsync(new(seeded.Entity.Uid));
 
         Assert.That(result.IsSuccess, Is.True);
@@ -22,7 +22,7 @@ public sealed class DeleteClaimTypeCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsNotFoundForUnknownClaimType()
     {
-        var result = await new DeleteClaimTypeCommandHandler(ClaimTypes, UnitOfWork)
+        Result result = await new DeleteClaimTypeCommandHandler(ClaimTypes, UnitOfWork)
             .ExecuteAsync(new(Guid.NewGuid()));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.NotFound));

@@ -1,4 +1,6 @@
 using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Roles;
+using App.Core.Domain.Identity.Users;
 using App.Core.Queries.Identity.Claims;
 using App.Core.SharedLibrary.Errors;
 
@@ -9,13 +11,13 @@ public sealed class GetClaimTypeByUidQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsClaimAndRequestedRelatedClaims()
     {
-        var claimType = await SeedClaimTypeAsync();
-        var role = await SeedRoleAsync();
-        var user = await SeedUserAsync();
-        await SeedRoleClaimAsync(role.Id, claimType.Id);
-        await SeedUserClaimAsync(user.Id, claimType.Id);
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        (User Entity, long Id) user = await SeedUserAsync();
+        await SeedRoleClaimAsync(role.Entity.Uid, claimType.Entity.Uid);
+        await SeedUserClaimAsync(user.Entity.Uid, claimType.Entity.Uid);
 
-        var result = await new GetClaimTypeByUidQueryHandler(ClaimTypes)
+        Result<ClaimType> result = await new GetClaimTypeByUidQueryHandler(ClaimTypes)
             .ExecuteAsync(new(claimType.Entity.Uid, IncludeRoleClaims: true, IncludeUserClaims: true));
 
         Assert.That(result.IsSuccess, Is.True);
@@ -26,7 +28,7 @@ public sealed class GetClaimTypeByUidQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsNotFoundForUnknownUid()
     {
-        var result = await new GetClaimTypeByUidQueryHandler(ClaimTypes).ExecuteAsync(new(Guid.NewGuid()));
+        Result<ClaimType> result = await new GetClaimTypeByUidQueryHandler(ClaimTypes).ExecuteAsync(new(Guid.NewGuid()));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.NotFound));
     }

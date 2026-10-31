@@ -1,5 +1,6 @@
 using App.Core.Command.Identity.Claims;
 using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Roles;
 
 namespace App.Tests.Integration.Commands.Claims;
 
@@ -8,14 +9,14 @@ public sealed class CreateRoleClaimCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_CreatesRoleClaim()
     {
-        var role = await SeedRoleAsync();
-        var claimType = await SeedClaimTypeAsync();
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
         CreateRoleClaimCommandHandler handler = new(RoleClaims, UnitOfWork);
 
-        var result = await handler.ExecuteAsync(new(role.Id, claimType.Id, " enabled "));
+        Result<Guid> result = await handler.ExecuteAsync(new(role.Entity.Uid, claimType.Entity.Uid, " enabled "));
 
         Assert.That(result.IsSuccess, Is.True);
-        var saved = await RoleClaims.GetRoleClaimByUidAsync(result.Value);
+        Result<RoleClaim> saved = await RoleClaims.GetRoleClaimByUidAsync(result.Value);
         Assert.That(saved.IsSuccess, Is.True);
         Assert.That(saved.Value.ClaimValue, Is.EqualTo("enabled"));
     }
@@ -23,10 +24,10 @@ public sealed class CreateRoleClaimCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsFailureWhenForeignKeyIsInvalid()
     {
-        var claimType = await SeedClaimTypeAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
 
-        var result = await new CreateRoleClaimCommandHandler(RoleClaims, UnitOfWork)
-            .ExecuteAsync(new(long.MaxValue, claimType.Id, "enabled"));
+        Result<Guid> result = await new CreateRoleClaimCommandHandler(RoleClaims, UnitOfWork)
+            .ExecuteAsync(new(Guid.NewGuid(), claimType.Entity.Uid, "enabled"));
 
         Assert.That(result.IsFailure, Is.True);
     }

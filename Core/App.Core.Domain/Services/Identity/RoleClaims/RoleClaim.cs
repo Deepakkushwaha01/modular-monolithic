@@ -5,14 +5,14 @@ namespace App.Core.Domain.Identity.Claims;
 
 public class RoleClaim : DomainEntity
 {
-    public long RoleId { get; protected set; }
-    public long ClaimTypeId { get; protected set; }
+    public Guid RoleId { get; protected set; }
+    public Guid ClaimTypeId { get; protected set; }
     public string ClaimValue { get; protected set; } = "true";
     public DateTime CreatedAt { get; protected set; }
 
     public void Update(string claimValue) { ClaimValue = claimValue; MarkModified(); }
 
-    public static RoleClaim Create(long roleId, long claimTypeId, string claimValue)
+    public static RoleClaim Create(Guid roleId, Guid claimTypeId, string claimValue)
     {
         return new RoleClaim
         {
@@ -25,7 +25,7 @@ public class RoleClaim : DomainEntity
         };
     }
 
-    public static RoleClaim Create(long id, Guid uid, long roleId, long claimTypeId, string claimValue,
+    public static RoleClaim Create(long id, Guid uid, Guid roleId, Guid claimTypeId, string claimValue,
         DateTime createdAt, DateTime createdOn, DateTime? updatedOn)
     {
         return new RoleClaim

@@ -5,11 +5,11 @@ namespace App.API.Controllers.Identity.Contracts;
 
 public sealed class RoleClaimRequest
 {
-    [Range(1, long.MaxValue, ErrorMessage = IdentityErrorMessages.RoleIdMustBePositive)]
-    public long RoleId { get; init; }
+    [Required]
+    public Guid? RoleId { get; init; }
 
-    [Range(1, long.MaxValue, ErrorMessage = IdentityErrorMessages.ClaimTypeIdMustBePositive)]
-    public long ClaimTypeId { get; init; }
+    [Required]
+    public Guid? ClaimTypeId { get; init; }
 
     [Required(ErrorMessage = IdentityErrorMessages.ClaimValueRequired)]
     [StringLength(255, ErrorMessage = IdentityErrorMessages.ClaimValueTooLong)]

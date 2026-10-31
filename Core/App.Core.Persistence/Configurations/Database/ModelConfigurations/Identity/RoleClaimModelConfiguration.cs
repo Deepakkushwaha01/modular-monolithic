@@ -14,11 +14,11 @@ public class RoleClaimModelConfiguration : IEntityTypeConfiguration<RoleClaim>
 
         builder.ConfigureTrackedEntity();
 
-        builder.Property(x => x.RoleId).HasColumnType("bigint").IsRequired();
-        builder.Property(x => x.ClaimTypeId).HasColumnType("bigint").IsRequired();
+        builder.Property(x => x.RoleId).HasColumnType("uuid").IsRequired();
+        builder.Property(x => x.ClaimTypeId).HasColumnType("uuid").IsRequired();
         builder.Property(x => x.ClaimValue).HasColumnType("character varying").HasMaxLength(255).HasDefaultValue("true").IsRequired();
 
-        builder.HasOne(x => x.Role).WithMany(x => x.RoleClaims).HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Cascade);
-        builder.HasOne(x => x.ClaimType).WithMany(x => x.RoleClaims).HasForeignKey(x => x.ClaimTypeId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Role).WithMany(x => x.RoleClaims).HasForeignKey(x => x.RoleId).HasPrincipalKey(x => x.Uid).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.ClaimType).WithMany(x => x.RoleClaims).HasForeignKey(x => x.ClaimTypeId).HasPrincipalKey(x => x.Uid).OnDelete(DeleteBehavior.Cascade);
     }
 }

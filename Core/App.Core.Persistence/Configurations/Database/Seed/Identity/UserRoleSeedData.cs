@@ -15,10 +15,10 @@ internal static class UserRoleSeedData
             {
                 Id = 1L,
                 Uid = Guid.Parse("50000000-0000-0000-0000-000000000001"),
-                UserId = 1L,
-                RoleId = 5L,
+                UserId = Guid.Parse("30000000-0000-0000-0000-000000000001"),
+                RoleId = Guid.Parse("10000000-0000-0000-0000-000000000005"),
                 AssignedAt = SeededOn,
-                AssignedBy = (long?)null,
+                AssignedBy = (Guid?)null,
                 CreatedOn = SeededOn,
                 CreatedBy = "System",
                 UpdatedOn = (DateTime?)null
@@ -27,10 +27,10 @@ internal static class UserRoleSeedData
             {
                 Id = 2L,
                 Uid = Guid.Parse("50000000-0000-0000-0000-000000000002"),
-                UserId = 2L,
-                RoleId = 2L,
+                UserId = Guid.Parse("30000000-0000-0000-0000-000000000002"),
+                RoleId = Guid.Parse("10000000-0000-0000-0000-000000000002"),
                 AssignedAt = SeededOn,
-                AssignedBy = (long?)null,
+                AssignedBy = (Guid?)null,
                 CreatedOn = SeededOn,
                 CreatedBy = "System",
                 UpdatedOn = (DateTime?)null
@@ -39,10 +39,10 @@ internal static class UserRoleSeedData
             {
                 Id = 3L,
                 Uid = Guid.Parse("50000000-0000-0000-0000-000000000003"),
-                UserId = 3L,
-                RoleId = 3L,
+                UserId = Guid.Parse("30000000-0000-0000-0000-000000000003"),
+                RoleId = Guid.Parse("10000000-0000-0000-0000-000000000003"),
                 AssignedAt = SeededOn,
-                AssignedBy = (long?)null,
+                AssignedBy = (Guid?)null,
                 CreatedOn = SeededOn,
                 CreatedBy = "System",
                 UpdatedOn = (DateTime?)null

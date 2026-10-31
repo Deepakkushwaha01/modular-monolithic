@@ -32,7 +32,7 @@ public sealed class UserRolesController(ICommandDispatcher commands, IQueryDispa
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] UserRoleRequest request)
     {
-        Result<Guid> result = await commands.ExecuteAsync(new CreateUserRoleCommand(request.UserId, request.RoleId, request.AssignedBy));
+        Result<Guid> result = await commands.ExecuteAsync(new CreateUserRoleCommand(request.UserId!.Value, request.RoleId!.Value, request.AssignedBy));
         return result.IsFailure ? Fail(result) : CreatedAtAction(nameof(Get), new { uid = result.Value }, new { uid = result.Value });
     }
 

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../App.Api/App.API.csproj" />
     <ProjectReference Include="../../../Core/App.Core.Command/App.Core.Command.csproj" />
     <ProjectReference Include="../../../Core/App.Core.Domain/App.Core.Domain.csproj" />
     <ProjectReference Include="../../../Core/App.Core.Persistence/App.Core.Persistence.csproj" />

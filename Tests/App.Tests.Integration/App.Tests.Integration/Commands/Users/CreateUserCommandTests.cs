@@ -12,11 +12,11 @@ public sealed class CreateUserCommandTests : IntegrationTestBase
     {
         CreateUserCommandHandler handler = new(Users, UnitOfWork, new PasswordHasher<User>());
 
-        var result = await handler.ExecuteAsync(
+        Result<Guid> result = await handler.ExecuteAsync(
             new("  PERSON@Example.com ", "StrongPass123", "+14155552671", " Test ", " User "));
 
         Assert.That(result.IsSuccess, Is.True);
-        var saved = await Users.GetUserByUidAsync(result.Value);
+        Result<User> saved = await Users.GetUserByUidAsync(result.Value);
         Assert.That(saved.Value.Email, Is.EqualTo("person@example.com"));
         Assert.That(saved.Value.FirstName, Is.EqualTo("Test"));
         Assert.That(saved.Value.LastName, Is.EqualTo("User"));
@@ -31,7 +31,7 @@ public sealed class CreateUserCommandTests : IntegrationTestBase
     [TestCase("person@example.com", "StrongPass123", "")]
     public async Task ExecuteAsync_RejectsInvalidEmailPasswordOrPhone(string email, string password, string phone)
     {
-        var result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
+        Result<Guid> result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
             .ExecuteAsync(new(email, password, phone));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.Invalid));
@@ -41,7 +41,7 @@ public sealed class CreateUserCommandTests : IntegrationTestBase
     [TestCase(129)]
     public async Task ExecuteAsync_RejectsPasswordOutsideConfiguredLength(int length)
     {
-        var result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
+        Result<Guid> result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
             .ExecuteAsync(new("person@example.com", new string('a', length), "+14155552671"));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.Invalid));
@@ -51,7 +51,7 @@ public sealed class CreateUserCommandTests : IntegrationTestBase
     [TestCase(128)]
     public async Task ExecuteAsync_AcceptsPasswordAtConfiguredLengthBoundaries(int length)
     {
-        var result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
+        Result<Guid> result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
             .ExecuteAsync(new($"person{length}@example.com", new string('a', length), "+14155552671"));
 
         Assert.That(result.IsSuccess, Is.True);
@@ -62,7 +62,7 @@ public sealed class CreateUserCommandTests : IntegrationTestBase
     {
         await SeedUserAsync("existing@example.com");
 
-        var result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
+        Result<Guid> result = await new CreateUserCommandHandler(Users, UnitOfWork, new PasswordHasher<User>())
             .ExecuteAsync(new("EXISTING@example.com", "StrongPass123", "+14155552671"));
 
         Assert.That(result.ResultType, Is.EqualTo(ResultType.Conflicted));

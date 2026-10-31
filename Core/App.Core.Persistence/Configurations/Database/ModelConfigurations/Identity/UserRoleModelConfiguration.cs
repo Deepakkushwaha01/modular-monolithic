@@ -14,14 +14,14 @@ public class UserRoleModelConfiguration : IEntityTypeConfiguration<UserRole>
 
         builder.ConfigureTrackedEntity();
 
-        builder.Property(x => x.UserId).HasColumnType("bigint").IsRequired();
-        builder.Property(x => x.RoleId).HasColumnType("bigint").IsRequired();
+        builder.Property(x => x.UserId).HasColumnType("uuid").IsRequired();
+        builder.Property(x => x.RoleId).HasColumnType("uuid").IsRequired();
         builder.Property(x => x.AssignedAt).HasColumnType("timestamp with time zone").HasDefaultValueSql("now()").IsRequired();
-        builder.Property(x => x.AssignedBy).HasColumnType("bigint").HasDefaultValue(null);
+        builder.Property(x => x.AssignedBy).HasColumnType("uuid").HasDefaultValue(null);
 
         builder.HasIndex(x => x.RoleId);
-        builder.HasOne(x => x.User).WithMany(x => x.UserRoles).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-        builder.HasOne(x => x.Role).WithMany(x => x.UserRoles).HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Cascade);
-        builder.HasOne(x => x.AssignedByUser).WithMany().HasForeignKey(x => x.AssignedBy).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(x => x.User).WithMany(x => x.UserRoles).HasForeignKey(x => x.UserId).HasPrincipalKey(x => x.Uid).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Role).WithMany(x => x.UserRoles).HasForeignKey(x => x.RoleId).HasPrincipalKey(x => x.Uid).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.AssignedByUser).WithMany().HasForeignKey(x => x.AssignedBy).HasPrincipalKey(x => x.Uid).OnDelete(DeleteBehavior.SetNull);
     }
 }

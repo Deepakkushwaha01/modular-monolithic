@@ -1,8 +1,8 @@
+using App.Core.Domain.Identity.Users;
 using App.Core.Persistence.Identity.Addresses.Repositories;
 using App.Core.Persistence.Identity.Claims.Repositories;
 using App.Core.Persistence.Identity.Roles.Repositories;
 using App.Core.Persistence.Identity.Users.Repositories;
-using App.Core.Domain.Identity.Users;
 using Microsoft.AspNetCore.Identity;
 using App.Core.Persistence.Configurations.Database.Context.UnitOfWork;
 
@@ -10,7 +10,7 @@ namespace App.API.Registers;
 
 public static partial class Register
 {
-    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment _)
+    public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         #region Database Context
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -30,7 +30,6 @@ public static partial class Register
         #endregion
 
         services.AddSharedMediatrServices();
-
         return services;
     }
 }

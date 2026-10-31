@@ -5,8 +5,8 @@ namespace App.Core.Persistence.Identity.Claims.Entities;
 
 public class UserClaim : TrackedEntity
 {
-    public long UserId { get; protected internal set; }
-    public long ClaimTypeId { get; protected internal set; }
+    public Guid UserId { get; protected internal set; }
+    public Guid ClaimTypeId { get; protected internal set; }
     public string ClaimValue { get; protected internal set; } = "true";
 
     public User User { get; protected internal set; } = null!;
@@ -15,8 +15,8 @@ public class UserClaim : TrackedEntity
     public static UserClaim Create(
         long id,
         Guid uid,
-        long userId,
-        long claimTypeId,
+        Guid userId,
+        Guid claimTypeId,
         string claimValue,
         DateTime createdOn,
         DateTime? updatedOn)

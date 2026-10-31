@@ -1,4 +1,5 @@
 using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Roles;
 using App.Core.Queries.Identity.Claims;
 
 namespace App.Tests.Integration.Queries.Claims;
@@ -8,7 +9,7 @@ public sealed class GetRoleClaimsQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsEmptyListWhenNoClaimsExist()
     {
-        var result = await new GetRoleClaimsQueryHandler(RoleClaims).ExecuteAsync(new());
+        Result<List<RoleClaim>> result = await new GetRoleClaimsQueryHandler(RoleClaims).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Is.Empty);
@@ -17,11 +18,11 @@ public sealed class GetRoleClaimsQueryTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsAllRoleClaims()
     {
-        var role = await SeedRoleAsync();
-        var claimType = await SeedClaimTypeAsync();
-        await SeedRoleClaimAsync(role.Id, claimType.Id, "admin");
+        (Role Entity, long Id) role = await SeedRoleAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
+        await SeedRoleClaimAsync(role.Entity.Uid, claimType.Entity.Uid, "admin");
 
-        var result = await new GetRoleClaimsQueryHandler(RoleClaims).ExecuteAsync(new());
+        Result<List<RoleClaim>> result = await new GetRoleClaimsQueryHandler(RoleClaims).ExecuteAsync(new());
 
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value, Has.Count.EqualTo(1));

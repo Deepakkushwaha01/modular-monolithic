@@ -1,5 +1,6 @@
 using App.Core.Command.Identity.Claims;
 using App.Core.Domain.Identity.Claims;
+using App.Core.Domain.Identity.Users;
 
 namespace App.Tests.Integration.Commands.Claims;
 
@@ -8,14 +9,14 @@ public sealed class CreateUserClaimCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_CreatesUserClaim()
     {
-        var user = await SeedUserAsync();
-        var claimType = await SeedClaimTypeAsync();
+        (User Entity, long Id) user = await SeedUserAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
 
-        var result = await new CreateUserClaimCommandHandler(UserClaims, UnitOfWork)
-            .ExecuteAsync(new(user.Id, claimType.Id, " premium "));
+        Result<Guid> result = await new CreateUserClaimCommandHandler(UserClaims, UnitOfWork)
+            .ExecuteAsync(new(user.Entity.Uid, claimType.Entity.Uid, " premium "));
 
         Assert.That(result.IsSuccess, Is.True);
-        var saved = await UserClaims.GetUserClaimByUidAsync(result.Value);
+        Result<UserClaim> saved = await UserClaims.GetUserClaimByUidAsync(result.Value);
         Assert.That(saved.IsSuccess, Is.True);
         Assert.That(saved.Value.ClaimValue, Is.EqualTo("premium"));
     }
@@ -23,10 +24,10 @@ public sealed class CreateUserClaimCommandTests : IntegrationTestBase
     [Test]
     public async Task ExecuteAsync_ReturnsFailureWhenForeignKeyIsInvalid()
     {
-        var claimType = await SeedClaimTypeAsync();
+        (ClaimType Entity, long Id) claimType = await SeedClaimTypeAsync();
 
-        var result = await new CreateUserClaimCommandHandler(UserClaims, UnitOfWork)
-            .ExecuteAsync(new(long.MaxValue, claimType.Id, "premium"));
+        Result<Guid> result = await new CreateUserClaimCommandHandler(UserClaims, UnitOfWork)
+            .ExecuteAsync(new(Guid.NewGuid(), claimType.Entity.Uid, "premium"));
 
         Assert.That(result.IsFailure, Is.True);
     }

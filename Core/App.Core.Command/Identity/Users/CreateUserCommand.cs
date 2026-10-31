@@ -3,6 +3,7 @@ using App.Core.Domain.Identity.Users;
 using App.Core.Persistence.Configurations.Database.Context.UnitOfWork;
 using App.Core.Persistence.Identity.Users.Repositories;
 using App.Core.SharedLibrary.Configuration.Identity;
+using App.Core.SharedLibrary.Enums;
 using App.Core.SharedLibrary.Errors;
 using App.Core.SharedLibrary.Helpers;
 using App.Core.SharedLibrary.Patterns.Mediatr.Abstractions;
@@ -76,9 +77,9 @@ public sealed class CreateUserCommandHandler(
             return Result.Conflicted<Guid>(IdentityErrorMessages.AccountEmailExists);
         }
 
-        User passwordHashContext = User.Create(email, string.Empty, normalizedPhone);
+        User passwordHashContext = User.Create(email, string.Empty, normalizedPhone, Portal.UserPortal);
         string passwordHash = passwordHasher.HashPassword(passwordHashContext, password);
-        User user = User.Create(email, passwordHash, normalizedPhone, command.FirstName?.Trim(), command.LastName?.Trim());
+        User user = User.Create(email, passwordHash, normalizedPhone, Portal.UserPortal, command.FirstName?.Trim(), command.LastName?.Trim());
 
         Result inserted = await _userRepository.InsertAsync(user);
         if (inserted.IsFailure)

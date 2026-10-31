@@ -63,6 +63,7 @@ public sealed class IdentityErrorMessages : ErrorMessage
     public const string SystemRoleCannotBeChanged = "System roles cannot be renamed or changed here.";
 
     public const string InvalidEmailOrPassword = "Invalid email or password.";
+    public const string InvalidRefreshToken = "The refresh token is invalid, expired, or revoked.";
 }
 
 public sealed class PersistenceErrorMessages : ErrorMessage

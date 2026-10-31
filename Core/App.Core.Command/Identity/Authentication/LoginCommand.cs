@@ -1,4 +1,6 @@
 using App.Core.Persistence.Configurations.Database.Context.UnitOfWork;
+using App.Core.Persistence.Identity.Authentication.Factories;
+using App.Core.Persistence.Identity.Authentication.Repositories;
 using App.Core.Persistence.Identity.Users.Repositories;
 using App.Core.SharedLibrary.Errors;
 using App.Core.SharedLibrary.Helpers;
@@ -13,6 +15,7 @@ public sealed record LoginCommand(string Email, string Password) : ICommand<Resu
 
 public sealed class LoginCommandHandler(
     IUserRepository userRepository,
+    IRefreshTokenRepository refreshTokenRepository,
     IUnitOfWork unitOfWork,
     IPasswordHasher<DomainUser> passwordHasher,
     JwtTokenHelper tokenHelper)
@@ -59,6 +62,11 @@ public sealed class LoginCommandHandler(
         }
 
         string accessToken = tokenHelper.CreateAccessToken(user.Uid, user.Email, user.Portal, user.Roles, user.Claims);
+        RefreshTokenResult refreshToken = tokenHelper.CreateRefreshToken();
+        Guid familyUid = Guid.NewGuid();
+        await refreshTokenRepository.InsertAsync(App.Core.Domain.Identity.Authentication.RefreshToken
+            .Create(user.Uid, familyUid, refreshToken.TokenHash, refreshToken.ExpiresAt.UtcDateTime)
+            .ToRefreshTokenEntity());
 
         Result saved = await unitOfWork.SaveChangesAsync();
         if (saved.IsFailure)
@@ -66,7 +74,7 @@ public sealed class LoginCommandHandler(
             return Result.FromError<DomainUser>(saved);
         }
 
-        user.UpdateAccessToken(accessToken);
+        user.UpdateTokenPair(accessToken, refreshToken.Token, tokenHelper.GetAccessTokenExpiresAt(), refreshToken.ExpiresAt);
 
         return Result.Ok(user);
     }

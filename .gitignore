@@ -4,3 +4,5 @@ obj/
 
 # EF Core Migrations
 Core/App.Core.Persistence/Migrations/
+!Core/App.Core.Persistence/Migrations/
+Core/App.Core.Persistence/Migrations/*

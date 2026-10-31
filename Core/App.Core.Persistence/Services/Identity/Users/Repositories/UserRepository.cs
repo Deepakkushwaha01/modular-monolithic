@@ -66,6 +66,47 @@ public sealed class UserRepository(IAppDbContext appDbContext)
         }
     }
 
+    public async Task<Result<DomainUser>> GetUserWithRolesAndClaimsByUidAsync(Guid uid)
+    {
+        try
+        {
+            PersistenceUser? user = await AllNoTrackedOf()
+                .Include(entity => entity.UserRoles)
+                    .ThenInclude(userRole => userRole.Role)
+                        .ThenInclude(role => role.RoleClaims)
+                            .ThenInclude(roleClaim => roleClaim.ClaimType)
+                .Include(entity => entity.UserClaims)
+                    .ThenInclude(userClaim => userClaim.ClaimType)
+                .SingleOrDefaultAsync(entity => entity.Uid == uid && entity.IsActive && !entity.IsBlocked);
+
+            if (user is null)
+                return Result.NotFound<DomainUser>(PersistenceErrorMessages.EntityNotFound);
+
+            List<PersistenceRole> activeRoles = user.UserRoles
+                .Select(userRole => userRole.Role)
+                .Where(role => role is { IsActive: true })
+                .DistinctBy(role => role.Uid)
+                .ToList();
+
+            List<string> claims = user.UserClaims
+                .Where(userClaim => userClaim.ClaimType is { IsActive: true } && bool.Parse(userClaim.ClaimValue))
+                .Select(userClaim => userClaim.ClaimType.Name)
+                .ToList();
+            claims.AddRange(activeRoles.SelectMany(role => role.RoleClaims)
+                .Where(roleClaim => roleClaim.ClaimType is { IsActive: true } && bool.Parse(roleClaim.ClaimValue))
+                .Select(roleClaim => roleClaim.ClaimType.Name));
+
+            DomainUser domainUser = user.ToUserDomain();
+            domainUser.AddRoles(activeRoles.Select(role => role.Slug));
+            domainUser.AddClaims(claims);
+            return Result.Ok(domainUser);
+        }
+        catch (Exception)
+        {
+            return Result.Failed<DomainUser>(PersistenceErrorMessages.DatabaseInternalError);
+        }
+    }
+
     public async Task<Result> RecordSuccessfulLoginAsync(Guid uid)
     {
         try

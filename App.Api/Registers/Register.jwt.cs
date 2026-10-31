@@ -16,6 +16,8 @@ public static partial class Register
             .Validate(settings => !string.IsNullOrWhiteSpace(settings.Audience), "Jwt:Audience is required.")
             .Validate(settings => settings.AccessTokenLifetimeMinutes is > 0 and <= 1440,
                 "Jwt:AccessTokenLifetimeMinutes must be between 1 and 1440.")
+            .Validate(settings => settings.RefreshTokenLifetimeDays is > 0 and <= 365,
+                "Jwt:RefreshTokenLifetimeDays must be between 1 and 365.")
             .Validate(settings => !string.IsNullOrWhiteSpace(settings.SigningKey)
                 && Encoding.UTF8.GetByteCount(settings.SigningKey) >= 32,
                 "Jwt:SigningKey must contain at least 32 UTF-8 bytes. Configure it in API settings or with Jwt__SigningKey.")

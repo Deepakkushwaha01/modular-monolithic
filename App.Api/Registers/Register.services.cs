@@ -3,6 +3,7 @@ using App.Core.Persistence.Identity.Addresses.Repositories;
 using App.Core.Persistence.Identity.Claims.Repositories;
 using App.Core.Persistence.Identity.Roles.Repositories;
 using App.Core.Persistence.Identity.Users.Repositories;
+using App.Core.Persistence.Identity.Authentication.Repositories;
 using Microsoft.AspNetCore.Identity;
 using App.Core.Persistence.Configurations.Database.Context.UnitOfWork;
 
@@ -19,6 +20,7 @@ public static partial class Register
         #region Identities Repositories
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IClaimTypeRepository, ClaimTypeRepository>();

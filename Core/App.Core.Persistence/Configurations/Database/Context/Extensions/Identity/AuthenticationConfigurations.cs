@@ -9,6 +9,7 @@ namespace App.Core.Persistence.Configurations.Database.Context.Extensions.Identi
         public static void ConfigureIdentity(this ModelBuilder modelBuilder, bool loadSeedData = false)
         {
             modelBuilder.ApplyConfiguration(new UserModelConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenModelConfiguration());
             modelBuilder.ApplyConfiguration(new AddressModelConfiguration());
             modelBuilder.ApplyConfiguration(new RoleModelConfiguration());
             modelBuilder.ApplyConfiguration(new ClaimTypeModelConfiguration());

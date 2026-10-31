@@ -1,7 +1,6 @@
 using App.API.Controllers.Identity.Contracts;
 using App.API.Settings;
 using App.Core.Command.Identity.Authentication;
-using App.Core.SharedLibrary.Helpers;
 using App.Core.SharedLibrary.Patterns.Mediatr.Abstractions;
 using App.Core.SharedLibrary.Patterns.Result;
 using Asp.Versioning;
@@ -33,6 +32,23 @@ public sealed class LoginController(
             return StatusCode((int)result.HttpStatusCode, result.Message);
         }
 
-        return Ok(new LoginResponse(result.Value.AccessToken, result.Value.Uid));
+        return Ok(new LoginResponse(result.Value.AccessToken,
+            result.Value.RefreshToken, result.Value.Uid));
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
+    {
+        Result<DomainUser> result = await commandDispatcher.ExecuteAsync(
+            new RefreshTokenCommand(request.RefreshToken), cancellationToken);
+
+        if (result.IsFailure)
+            return StatusCode((int)result.HttpStatusCode, result.Message);
+
+        return Ok(new LoginResponse(result.Value.AccessToken,
+            result.Value.RefreshToken, result.Value.Uid));
     }
 }

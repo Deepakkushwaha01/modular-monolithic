@@ -143,6 +143,11 @@ public sealed class JwtTokenHelper(IOptions<JwtSettings> options)
             expiresAt);
     }
 
+    public DateTimeOffset GetAccessTokenExpiresAt() =>
+        DateTimeOffset.UtcNow.AddMinutes(_settings.AccessTokenLifetimeMinutes);
+
+    public string GetRefreshTokenHash(string refreshToken) => HashRefreshToken(refreshToken);
+
     // Refresh token validation
     public bool TryValidateRefreshToken(
         string refreshToken,

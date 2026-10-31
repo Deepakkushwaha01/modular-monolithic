@@ -9,6 +9,8 @@ public interface IUserRepository : IRepository<PersistenceUser>
 {
     Task<Result<DomainUser>> GetUserWithRolesAndClaimsAsync(string email);
 
+    Task<Result<DomainUser>> GetUserWithRolesAndClaimsByUidAsync(Guid uid);
+
     Task<Result> RecordSuccessfulLoginAsync(Guid uid);
 
     Task<Result<DomainUser>> GetUserByUidAsync(

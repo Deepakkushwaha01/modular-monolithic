@@ -35,6 +35,12 @@ namespace App.Core.Domain.Identity.Users
 
         public string AccessToken { get; protected set; } = string.Empty;
 
+        public string RefreshToken { get; protected set; } = string.Empty;
+
+        public DateTimeOffset AccessTokenExpiresAt { get; protected set; }
+
+        public DateTimeOffset RefreshTokenExpiresAt { get; protected set; }
+
         public List<string> Roles { get; protected internal set; } = new List<string>();
 
         public List<string> Claims { get; protected internal set; } = new List<string>();
@@ -141,6 +147,15 @@ namespace App.Core.Domain.Identity.Users
         public void UpdateAccessToken(string accessToken)
         {
             AccessToken = accessToken;
+        }
+
+        public void UpdateTokenPair(string accessToken, string refreshToken, DateTimeOffset accessTokenExpiresAt,
+            DateTimeOffset refreshTokenExpiresAt)
+        {
+            AccessToken = accessToken;
+            RefreshToken = refreshToken;
+            AccessTokenExpiresAt = accessTokenExpiresAt;
+            RefreshTokenExpiresAt = refreshTokenExpiresAt;
         }
 
         #endregion

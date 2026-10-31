@@ -25,6 +25,7 @@ namespace App.API.Registers
                 .RegisterApiVersioning()
                 .RegisterSwagger(builder.Configuration)
                 .RegisterJwtServices(builder.Configuration)
+                .RegisterRedis(builder.Configuration)
                 .RegisterAuthentication(builder.Configuration)
                 .RegisterAuthorization()
                 .RegisterServices()

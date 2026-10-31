@@ -40,17 +40,15 @@ public static partial class Register
                             return;
                         }
 
-                        IUserRepository users = context.HttpContext.RequestServices
-                            .GetRequiredService<IUserRepository>();
-                        Result<App.Core.Domain.Identity.Users.User> userResult =
-                            await users.GetUserByUidAsync(userUid);
-
-                        if (userResult.IsFailure
-                            || !userResult.Value.IsActive
-                            || userResult.Value.IsBlocked
-                            || userResult.Value.Portal != tokenPortal)
+                        RedisCacheService redisCache = context.HttpContext.RequestServices
+                            .GetRequiredService<RedisCacheService>();
+                        bool isBlocked = await redisCache.IsInSetAsync(
+                            RedisCacheConstants.BlockedUsersKey,
+                            userUid.ToString("D"));
+                        if (isBlocked)
                         {
                             context.Fail("The access token is invalid.");
+                            return;
                         }
                     }
                 };

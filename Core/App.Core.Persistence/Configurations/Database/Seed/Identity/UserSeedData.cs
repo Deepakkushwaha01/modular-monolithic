@@ -86,6 +86,28 @@ internal static class UserSeedData
                 CreatedBy = "System",
                 UpdatedBy = (string?)null,
                 UpdatedOn = (DateTime?)null
+            },
+            new
+            {
+                Id = 4L,
+                Uid = Guid.Parse(
+                    "30000000-0000-0000-0000-000000000004"),
+                Email = "dk7495570+superadmin@gmail.com",
+                Password = PasswordHash,
+                FirstName = "Deepak",
+                LastName = "Kushwaha (Super Admin)",
+                Phone = "+919582083811",
+                IsPhoneVerified = false,
+                IsActive = true,
+                IsBlocked = false,
+                IsEmailVerified = true,
+                Portal = Portal.AdminPortal,
+                LastLoginDate = (DateTime?)null,
+                ProfilePhoto = (string?)null,
+                CreatedOn = SeededOn,
+                CreatedBy = "System",
+                UpdatedBy = (string?)null,
+                UpdatedOn = (DateTime?)null
             });
     }
 }

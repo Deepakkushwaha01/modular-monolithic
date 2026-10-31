@@ -46,6 +46,18 @@ internal static class UserRoleSeedData
                 CreatedOn = SeededOn,
                 CreatedBy = "System",
                 UpdatedOn = (DateTime?)null
+            },
+            new
+            {
+                Id = 4L,
+                Uid = Guid.Parse("50000000-0000-0000-0000-000000000004"),
+                UserId = Guid.Parse("30000000-0000-0000-0000-000000000004"),
+                RoleId = Guid.Parse("10000000-0000-0000-0000-000000000001"),
+                AssignedAt = SeededOn,
+                AssignedBy = (Guid?)null,
+                CreatedOn = SeededOn,
+                CreatedBy = "System",
+                UpdatedOn = (DateTime?)null
             });
     }
 }

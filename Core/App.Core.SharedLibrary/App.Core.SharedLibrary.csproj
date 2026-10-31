@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+      <!-- 
+      Redis Packages:
+      - Microsoft.Extensions.Caching.StackExchangeRedis: ASP.NET Core distributed cache implementation (IDistributedCache)
+      - StackExchange.Redis: High-performance low-level Redis client driver
+    -->
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.10" />
+    <PackageReference Include="StackExchange.Redis" Version="3.4.29" />
+
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
     <PackageReference Include="libphonenumber-csharp" Version="9.0.41" />

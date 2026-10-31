@@ -116,20 +116,7 @@ namespace App.Core.Domain.Identity.Users
         public void Deactivate()
         {
             IsActive = false;
-
-            MarkModified();
-        }
-
-        public void Block()
-        {
             IsBlocked = true;
-
-            MarkModified();
-        }
-
-        public void Unblock()
-        {
-            IsBlocked = false;
 
             MarkModified();
         }

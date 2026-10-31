@@ -66,6 +66,8 @@ public sealed class LoginCommandHandler(
             return Result.FromError<DomainUser>(saved);
         }
 
-        return Result.Ok(loginDataResult.Value);
+        user.UpdateAccessToken(accessToken);
+
+        return Result.Ok(user);
     }
 }

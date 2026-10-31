@@ -33,6 +33,6 @@ public sealed class LoginController(
             return StatusCode((int)result.HttpStatusCode, result.Message);
         }
 
-        return Ok(new LoginResponse("dsd", result.Value.Uid));
+        return Ok(new LoginResponse(result.Value.AccessToken, result.Value.Uid));
     }
 }

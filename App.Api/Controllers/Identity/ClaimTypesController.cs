@@ -6,6 +6,7 @@ using App.Core.Queries.Identity.Claims;
 using App.Core.SharedLibrary.Patterns.Mediatr.Abstractions;
 using App.Core.SharedLibrary.Patterns.Result;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.API.Controllers.Identity;
@@ -17,6 +18,7 @@ namespace App.API.Controllers.Identity;
 public sealed class ClaimTypesController(ICommandDispatcher commands, IQueryDispatcher queries) : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll(
         [FromQuery] bool includeRoleClaims = false,
         [FromQuery] bool includeUserClaims = false)

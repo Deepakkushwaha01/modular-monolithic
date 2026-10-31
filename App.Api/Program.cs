@@ -24,7 +24,10 @@ namespace App.API.Registers
             builder.Services
                 .RegisterApiVersioning()
                 .RegisterSwagger(builder.Configuration)
-                .RegisterServices(builder.Configuration, builder.Environment)
+                .RegisterJwtServices(builder.Configuration)
+                .RegisterAuthentication(builder.Configuration)
+                .RegisterAuthorization()
+                .RegisterServices()
                 .RegisterDatabase(builder.Configuration);
 
             return builder.Build();

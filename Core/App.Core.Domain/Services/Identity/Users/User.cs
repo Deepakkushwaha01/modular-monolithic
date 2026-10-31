@@ -33,6 +33,8 @@ namespace App.Core.Domain.Identity.Users
 
         public string? ProfilePhoto { get; protected set; }
 
+        public string AccessToken { get; protected set; } = string.Empty;
+
         public List<string> Roles { get; protected internal set; } = new List<string>();
 
         public List<string> Claims { get; protected internal set; } = new List<string>();
@@ -147,6 +149,11 @@ namespace App.Core.Domain.Identity.Users
         public void AddClaims(IEnumerable<string> claims)
         {
             Claims = claims.ToList();
+        }
+
+        public void UpdateAccessToken(string accessToken)
+        {
+            AccessToken = accessToken;
         }
 
         #endregion
